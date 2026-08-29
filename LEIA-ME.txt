@@ -1,0 +1,27 @@
+BOMBER BLAST v0.4.1
+================
+
+COMO ABRIR
+1. Extraia o ZIP.
+2. Dê dois cliques em ABRIR-JOGO.bat.
+3. O jogo abre no navegador em http://127.0.0.1:8765.
+
+CONTROLES
+- Setas / WASD: movimento
+- Espaço: colocar bomba
+- Q: detonar a bomba remota mais antiga
+- E: arremessar uma bomba quando possuir a luva
+- R: reiniciar a fase perdendo 1 vida (sem exploração infinita do cronômetro)
+- P / ESC: pausa
+
+v0.4.1
+- Código modularizado em game/entities/systems/render.
+- Dano de explosão corrigido para não repetir por fogo persistente.
+- Pausa separada da gravação de recordes.
+- Ataques de chefes respeitam paredes.
+- Chefes com 3 fases de agressividade e barra de HP.
+- Inimigos: bug, slime saltador, hunter perseguidor, tank, ghost e bomber.
+- Power-ups: alcance, bomba, velocidade, vida, chute, luva, remota, perfurante, rápida, gigante, escudo, chrono, nova e fantasma.
+- Sprites PNG locais, incluindo animação direcional do jogador, e músicas/SFX WAV locais.
+- História sincronizada com os mundos 1-5, 6-10, 11-15 e 16-20.
+- Arenas especiais nas fases 5, 10, 15 e 20.

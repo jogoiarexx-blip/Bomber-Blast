@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#07101f">
+  <title>Bomber Blast v0.4.1</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/story.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<main id="app">
+  <section id="menu" class="panel">
+    <button id="sound" class="icon" aria-label="Alternar som">🔊</button>
+    <div class="bomb-logo">✦</div><p class="eyebrow">LABIRINTO ARCADE · v0.4.1</p>
+    <h1>BOMBER <span>BLAST</span></h1>
+    <p class="lead">20 fases, quatro mundos, inimigos com comportamentos próprios, power-ups clássicos e chefes em múltiplas fases.</p>
+    <div class="records"><span>🏆 RECORDE <b id="record">0</b></span><span>🚩 MELHOR FASE <b id="bestLevel">1</b></span></div>
+    <p class="label">DIFICULDADE</p><div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div>
+    <p class="label">QUALIDADE GRÁFICA</p><div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div>
+    <p id="qualityInfo" class="quality-info"></p><p class="label">TAMANHO DOS CONTROLES MOBILE</p><div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
+    <label class="phase-picker">COMEÇAR NA FASE <select id="levelSelect"><option value="1">Fase 1</option></select></label>
+    <button id="play" class="play">COMEÇAR HISTÓRIA →</button>
+    <p class="help">SETAS/WASD: andar · ESPAÇO: bomba · Q: detonar remota · E: arremessar · R: reiniciar (-1 vida) · P/ESC: pausa</p>
+  </section>
+
+  <section id="story" class="story-screen" hidden>
+    <div class="story-art"><span class="story-hero">✦</span><span class="story-shadow">◆</span></div>
+    <p id="storyChapter" class="eyebrow">CAPÍTULO 1</p><h2 id="storyTitle">O PRIMEIRO SINAL</h2>
+    <div class="dialog-box"><b id="storySpeaker">NARRADOR</b><p id="storyText"></p><small id="storyPage">1 / 2</small></div>
+    <div class="story-actions"><button id="storySkip">PULAR CENA</button><button id="storyNext">CONTINUAR →</button></div>
+  </section>
+
+  <section id="game" hidden>
+    <header><button id="back">‹ MENU</button><div><h2>BOMBER BLAST v0.4.1</h2><small id="theme">JARDIM NEON</small></div><div class="top-actions"><button id="mute">♪</button><button id="pause">Ⅱ</button></div></header>
+    <div class="hud"><span><small>FASE</small><b id="level">1</b></span><span><small>VIDAS</small><b id="lives" class="hearts">♥♥♥</b></span><span><small>PONTOS</small><b id="score">00000</b></span><span><small>TEMPO</small><b id="time">03:00</b></span></div>
+    <div class="canvas-wrap"><canvas id="board" width="650" height="550"></canvas><div id="overlay" hidden><small id="overlayTop"></small><h2 id="overlayTitle"></h2><p id="overlayScore"></p><div><button id="primary"></button><button id="overlayMenu">MENU</button></div></div></div>
+    <div class="stats"><span id="bombStat">💣 1</span><span id="fireStat">🔥 2</span><span id="speedStat">⚡ Nv.1</span><span id="powerStat">SEM PODER</span><span id="enemyStat">👾 0</span></div>
+    <div class="controls"><div class="dpad"><i></i><button data-dir="up">↑</button><i></i><button data-dir="left">←</button><i></i><button data-dir="right">→</button><i></i><button data-dir="down">↓</button><i></i></div><div class="action-stack"><div class="special-stack"><button id="remoteButton" class="special-action">DET.<br>Q</button><button id="throwButton" class="special-action">LUVA<br>E</button></div><button id="bombButton" class="bomb-action"><b>💣</b>BOMBA</button></div></div>
+    <p class="legend">Power-ups: 🔥 alcance · 💣 capacidade · ⚡ velocidade · ♥ vida · 👟 chute · 🧤 arremesso · R remota · ↠ perfurante · » rápida · ● gigante</p>
+  </section>
+</main>
+<script src="js/game/config.js"></script>
+<script src="js/systems/audio.js"></script>
+<script src="js/game/levels.js"></script>
+<script src="js/entities/enemies.js"></script>
+<script src="js/systems/input.js"></script>
+<script src="js/game/gameplay.js"></script>
+<script src="js/render/renderer.js"></script>
+<script src="js/systems/ui.js"></script>
+<script src="js/story.js"></script>
+<script src="js/main.js"></script>
+</body></html>
