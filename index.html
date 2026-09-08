@@ -13,19 +13,81 @@
 </head>
 <body>
 <main id="app">
-  <section id="menu" class="panel">
+  <section id="menu" class="panel panel-menu">
     <button id="sound" class="icon" aria-label="Alternar som">🔊</button>
-    <div class="bomb-logo">✦</div><p class="eyebrow">LABIRINTO ARCADE · v0.5.0</p>
-    <h1>BOMBER <span>BLAST</span></h1>
-    <p class="lead">20 fases, quatro mundos, inimigos com comportamentos próprios, power-ups clássicos e chefes em múltiplas fases.</p>
-    <div class="records"><span>🏆 RECORDE <b id="record">0</b></span><span>🚩 MELHOR FASE <b id="bestLevel">1</b></span></div>
-    <p class="label">DIFICULDADE</p><div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div>
-    <p class="label">QUALIDADE GRÁFICA</p><div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div>
-    <p id="qualityInfo" class="quality-info"></p><p class="label">TAMANHO DOS CONTROLES MOBILE</p><div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
-    <p class="label">MAPA DA CAMPANHA</p><div id="worldMap" class="world-map"></div>
-    <label class="phase-picker">FASE SELECIONADA <select id="levelSelect"><option value="1">Fase 1</option></select></label>
-    <div class="battle-config"><label>JOGADORES NO BATTLE <select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label></div><div class="main-actions"><button id="play" class="play">COMEÇAR HISTÓRIA →</button><button id="battlePlay" class="battle-play">MODO BATTLE</button></div>
-    <p class="help">SETAS/WASD: andar · ESPAÇO: bomba · Q: detonar remota · E: arremessar · R: reiniciar (-1 vida) · P/ESC: pausa</p>
+    <div class="menu-shell">
+      <div class="menu-visual-column">
+        <div class="menu-brand-panel">
+          <p class="eyebrow">LABIRINTO ARCADE · v0.5.0</p>
+          <img class="menu-logo-art" src="assets/ui/logo-bomber-blast.svg" alt="Bomber Blast">
+          <p class="lead">Exploda seu caminho por 20 fases em quatro mundos, enfrente mini-chefes e chefes em múltiplas fases, colete power-ups clássicos e dispute o modo Battle local.</p>
+          <div class="records"><span>🏆 RECORDE <b id="record">0</b></span><span>🚩 MELHOR FASE <b id="bestLevel">1</b></span></div>
+        </div>
+        <div class="menu-stage-card">
+          <div class="stage-topbar">
+            <span>CAMPANHA ARCADE</span>
+            <span>4 MUNDOS · 20 FASES</span>
+          </div>
+          <div class="menu-stage">
+            <div class="stage-floor"></div>
+            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w1">
+            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w2">
+            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w3">
+            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w4">
+            <img src="assets/sprites/world/brick_1.png" alt="" class="stage-brick b1">
+            <img src="assets/sprites/world/brick_1.png" alt="" class="stage-brick b2">
+            <img src="assets/sprites/world/brick_1.png" alt="" class="stage-brick b3">
+            <img src="assets/sprites/fx/bomb_1.png" alt="" class="stage-bomb bomb-a">
+            <img src="assets/sprites/fx/blast_center.png" alt="" class="stage-blast">
+            <img src="assets/sprites/player/right_1.png" alt="" class="stage-player">
+            <img src="assets/sprites/enemy_anim/bug_1.png" alt="" class="stage-enemy enemy-a">
+            <img src="assets/sprites/enemy_anim/slime_2.png" alt="" class="stage-enemy enemy-b">
+            <img src="assets/sprites/enemy_anim/tank_0.png" alt="" class="stage-enemy enemy-c">
+            <img src="assets/sprites/power/range.png" alt="" class="stage-power power-a">
+            <img src="assets/sprites/power/remote.png" alt="" class="stage-power power-b">
+          </div>
+          <div class="feature-strip">
+            <div class="feature-chip"><strong>HISTÓRIA</strong><span>Campanha progressiva com objetivos variados.</span></div>
+            <div class="feature-chip"><strong>POWER-UPS</strong><span>Bombas, fogo, passes, chute, luva e especiais.</span></div>
+            <div class="feature-chip"><strong>BATTLE</strong><span>Partidas locais para 2 ou 4 jogadores.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="menu-controls-column">
+        <div class="settings-card top-card">
+          <div class="card-title-row"><h2>Jogar Agora</h2><span>Configuração rápida</span></div>
+          <div class="settings-grid">
+            <div class="setting-block">
+              <p class="label">DIFICULDADE</p>
+              <div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div>
+            </div>
+            <div class="setting-block">
+              <p class="label">QUALIDADE GRÁFICA</p>
+              <div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div>
+              <p id="qualityInfo" class="quality-info"></p>
+            </div>
+            <div class="setting-block">
+              <p class="label">CONTROLES MOBILE</p>
+              <div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-card map-card">
+          <div class="card-title-row"><h2>Mapa da Campanha</h2><span>Escolha a fase</span></div>
+          <div id="worldMap" class="world-map"></div>
+          <label class="phase-picker">FASE SELECIONADA <select id="levelSelect"><option value="1">Fase 1</option></select></label>
+        </div>
+        <div class="settings-card battle-config">
+          <div class="card-title-row"><h2>Modo Battle</h2><span>Multiplayer local</span></div>
+          <label>JOGADORES NO BATTLE <select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label>
+        </div>
+        <div class="main-actions">
+          <button id="play" class="play">COMEÇAR HISTÓRIA →</button>
+          <button id="battlePlay" class="battle-play">MODO BATTLE</button>
+        </div>
+        <p class="help">SETAS/WASD: andar · ESPAÇO: bomba · Q: detonar remota · E: arremessar · R: reiniciar (-1 vida) · P/ESC: pausa</p>
+      </div>
+    </div>
   </section>
 
   <section id="story" class="story-screen" hidden>
