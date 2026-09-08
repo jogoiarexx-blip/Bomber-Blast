@@ -1,27 +1,55 @@
-BOMBER BLAST v0.4.1
-================
+BOMBER BLAST v0.5.0
+==================
 
 COMO ABRIR
 1. Extraia o ZIP.
 2. Dê dois cliques em ABRIR-JOGO.bat.
-3. O jogo abre no navegador em http://127.0.0.1:8765.
+3. O jogo abre no navegador local.
 
-CONTROLES
+CAMPANHA
+- 20 arenas fixas e diferentes, divididas em 4 mundos.
+- Objetivos variados: eliminar inimigos, destruir blocos, encontrar núcleos, sobreviver, mini-chefes e chefes.
+- Portal escondido em bloco destrutível e power-ups pré-escondidos no mapa.
+- Acertar o portal com explosão gera uma onda de inimigos e volta a bloquear a saída.
+- Mini-chefes nas fases 4, 9, 14 e 19.
+- Chefes nas fases 5, 10, 15 e 20, com fases, barra de HP e ataques próprios.
+- Tela de resultado com nota S/A/B/C, tempo, inimigos, blocos, power-ups e combo máximo.
+- Sistema de Continue.
+- Mapa da campanha no menu.
+
+CONTROLES CAMPANHA
 - Setas / WASD: movimento
 - Espaço: colocar bomba
-- Q: detonar a bomba remota mais antiga
-- E: arremessar uma bomba quando possuir a luva
-- R: reiniciar a fase perdendo 1 vida (sem exploração infinita do cronômetro)
+- Q: detonar remota
+- E: arremessar bomba com a luva
+- R: reiniciar a fase (-1 vida)
 - P / ESC: pausa
 
-v0.4.1
-- Código modularizado em game/entities/systems/render.
-- Dano de explosão corrigido para não repetir por fogo persistente.
-- Pausa separada da gravação de recordes.
-- Ataques de chefes respeitam paredes.
-- Chefes com 3 fases de agressividade e barra de HP.
-- Inimigos: bug, slime saltador, hunter perseguidor, tank, ghost e bomber.
-- Power-ups: alcance, bomba, velocidade, vida, chute, luva, remota, perfurante, rápida, gigante, escudo, chrono, nova e fantasma.
-- Sprites PNG locais, incluindo animação direcional do jogador, e músicas/SFX WAV locais.
-- História sincronizada com os mundos 1-5, 6-10, 11-15 e 16-20.
-- Arenas especiais nas fases 5, 10, 15 e 20.
+POWER-UPS
+- Alcance, capacidade, velocidade, vida, chute, luva, remota, perfurante, rápida, gigante, escudo, chrono, nova e fantasma.
+- Bomb Pass: atravessa bombas.
+- Wall Pass: atravessa blocos destrutíveis.
+- Flame Pass: imunidade às explosões.
+
+MODO BATTLE
+- 2 ou 4 jogadores locais.
+- Primeiro a vencer 3 rodadas.
+- P1: WASD + Espaço
+- P2: Setas + Enter
+- P3: IJKL + O
+- P4: Numpad 8456 + 0
+- Gamepads: analógico/direcional + botão principal para bomba.
+
+MELHORIAS v0.5.0
+- Explosões com sprites próprios por centro/meio/ponta.
+- Bombas animadas por estágio do pavio.
+- Blocos com animação de destruição.
+- Bombas chutadas continuam deslizando.
+- Arremesso de bomba com arco visual.
+- IA avançada tenta evitar áreas prestes a explodir.
+- Inimigos com animação e animação de morte.
+- Tiles de wall/brick específicos por mundo.
+- Mais efeitos sonoros: passos, bloco quebrando, inimigo morrendo, chute, arremesso, countdown, vida, game over, entrada de chefe e portal atingido.
+- Música entra em modo de urgência nos 30 segundos finais.
+- Entrada especial para mini-chefes e chefes.
+- Combo mais importante para pontuação.
