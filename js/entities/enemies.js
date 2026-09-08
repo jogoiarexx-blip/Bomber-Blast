@@ -10,6 +10,6 @@ BB.spawnEnemies=function(grid,level,difficulty){
     const boss=(bossLevel||mini)&&i===0;
     const kind=boss?'boss':kinds[(i+Math.floor(level/2))%kinds.length];
     const hp=boss?(mini?2:3+BB.worldIndex(level)):kind==='tank'?2:1;
-    return {...p,rx:p.x,ry:p.y,id:BB.serial++,kind,hp,maxHp:hp,boss,mini,timer:360+i*100,special:boss?2200:kind==='bomber'?3000:0,hit:0,phase:1,frame:0,facing:'left',hitSources:{},deadTimer:0};
+    return {...p,rx:p.x,ry:p.y,id:BB.serial++,kind,hp,maxHp:hp,boss,mini,timer:360+i*100,special:boss?2200:kind==='bomber'?3000:0,hit:0,phase:1,frame:0,facing:'left',hitSources:{},deadTimer:0,attackTimer:0,attackDuration:0,attackStyle:'idle'};
   });
 };

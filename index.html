@@ -54,38 +54,70 @@
         </div>
       </div>
       <div class="menu-controls-column">
-        <div class="settings-card top-card">
-          <div class="card-title-row"><h2>Jogar Agora</h2><span>Configuração rápida</span></div>
-          <div class="settings-grid">
-            <div class="setting-block">
-              <p class="label">DIFICULDADE</p>
-              <div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div>
+        <div class="menu-tabs">
+          <button type="button" class="menu-tab-btn active" data-menu-tab="campaign">JOGAR</button>
+          <button type="button" class="menu-tab-btn" data-menu-tab="settings">CONFIGURAÇÕES</button>
+        </div>
+
+        <div class="menu-tab-panel active" data-menu-panel="campaign">
+          <div class="settings-card map-card">
+            <div class="card-title-row"><h2>Mapa da Campanha</h2><span>Escolha a fase</span></div>
+            <div id="worldMap" class="world-map"></div>
+            <label class="phase-picker">FASE SELECIONADA <select id="levelSelect"><option value="1">Fase 1</option></select></label>
+          </div>
+          <div class="settings-card battle-config">
+            <div class="card-title-row"><h2>Modo Battle</h2><span>Partida local rápida</span></div>
+            <p class="subcopy">Entre em batalhas locais com 2 ou 4 jogadores, usando teclado ou gamepads.</p>
+            <div class="main-actions compact-actions">
+              <button id="play" class="play">COMEÇAR HISTÓRIA →</button>
+              <button id="battlePlay" class="battle-play">MODO BATTLE</button>
             </div>
-            <div class="setting-block">
-              <p class="label">QUALIDADE GRÁFICA</p>
-              <div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div>
-              <p id="qualityInfo" class="quality-info"></p>
-            </div>
-            <div class="setting-block">
-              <p class="label">CONTROLES MOBILE</p>
-              <div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
+          </div>
+          <p class="help">SETAS/WASD: andar · ESPAÇO: bomba · Q: detonar remota · E: arremessar · R: reiniciar (-1 vida) · P/ESC: pausa</p>
+        </div>
+
+        <div class="menu-tab-panel" data-menu-panel="settings" hidden>
+          <div class="settings-card top-card">
+            <div class="card-title-row"><h2>Configurações</h2><span>Personalize o jogo</span></div>
+            <div class="settings-grid">
+              <div class="setting-block">
+                <p class="label">RESOLUÇÃO / ESCALA DE TELA</p>
+                <div class="difficulties resolution-options">
+                  <button data-resolution="auto">AUTO</button>
+                  <button data-resolution="1080">1080P</button>
+                  <button data-resolution="720">720P</button>
+                  <button data-resolution="480">480P</button>
+                </div>
+                <p id="resolutionInfo" class="quality-info"></p>
+              </div>
+              <div class="setting-block">
+                <p class="label">DIFICULDADE</p>
+                <div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div>
+              </div>
+              <div class="setting-block">
+                <p class="label">QUALIDADE GRÁFICA</p>
+                <div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div>
+                <p id="qualityInfo" class="quality-info"></p>
+              </div>
+              <div class="setting-block">
+                <p class="label">JOGADORES NO BATTLE</p>
+                <label class="inline-select"><span>PARTIDA LOCAL</span><select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label>
+              </div>
+              <div class="setting-block">
+                <p class="label">CONTROLES MOBILE</p>
+                <div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
+              </div>
+              <div class="setting-block settings-summary">
+                <p class="label">RESUMO</p>
+                <ul>
+                  <li><strong>Campanha:</strong> escolha a fase na aba <b>JOGAR</b>.</li>
+                  <li><strong>Battle:</strong> defina jogadores e inicie pela aba <b>JOGAR</b>.</li>
+                  <li><strong>Som:</strong> use o botão no canto superior direito.</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-        <div class="settings-card map-card">
-          <div class="card-title-row"><h2>Mapa da Campanha</h2><span>Escolha a fase</span></div>
-          <div id="worldMap" class="world-map"></div>
-          <label class="phase-picker">FASE SELECIONADA <select id="levelSelect"><option value="1">Fase 1</option></select></label>
-        </div>
-        <div class="settings-card battle-config">
-          <div class="card-title-row"><h2>Modo Battle</h2><span>Multiplayer local</span></div>
-          <label>JOGADORES NO BATTLE <select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label>
-        </div>
-        <div class="main-actions">
-          <button id="play" class="play">COMEÇAR HISTÓRIA →</button>
-          <button id="battlePlay" class="battle-play">MODO BATTLE</button>
-        </div>
-        <p class="help">SETAS/WASD: andar · ESPAÇO: bomba · Q: detonar remota · E: arremessar · R: reiniciar (-1 vida) · P/ESC: pausa</p>
       </div>
     </div>
   </section>
