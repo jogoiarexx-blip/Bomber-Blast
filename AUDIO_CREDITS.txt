@@ -1,0 +1,54 @@
+BOMBER BLAST v0.5.0 — FONTES DE ÁUDIO
+
+O jogo usa arquivos locais como fallback offline e, quando há conexão, tenta carregar
+alguns SFX CC0 selecionados para dar mais personalidade arcade/pixel ao áudio.
+
+SFX CC0 selecionados:
+
+1. Explosão 8-bit
+   Autor: Luke.RUSTLTD
+   Fonte: OpenGameArt — bomb_explosion_8bit
+   Licença: CC0 / domínio público
+   https://opengameart.org/content/bombexplosion8bit
+
+2. Teleporte / portal
+   Autor: fins (submetido por diligentcircle)
+   Fonte: OpenGameArt — Teleport
+   Licença: CC0
+   https://opengameart.org/content/teleport
+
+3. Power-up
+   Autor: Spring Spring / Julie Damsgaard
+   Fonte: OpenGameArt — Power-Up Sound Effects
+   Licença: CC0
+   https://opengameart.org/content/power-up-sound-effects
+
+4. Dano do jogador e arremesso
+   Autor: MoxieCat
+   Fonte: OpenGameArt — 8-bit Platformer SFX
+   Licença: CC0
+   https://opengameart.org/content/8-bit-platformer-sfx-0
+
+5. Morte/dano retro
+   Autor: Prinsu-Kun
+   Fonte: OpenGameArt — retro dead/destroyed/damaged sound
+   Licença: CC0
+   https://opengameart.org/content/retro-deaddestroyeddamaged-sound
+
+6. Clique de interface
+   Autor: Kenney
+   Fonte: Kenney UI Audio / GitHub mirror by Calinou
+   Licença: CC0 1.0
+   https://kenney.nl/assets/ui-audio
+   https://github.com/Calinou/kenney-ui-audio
+
+7. Game Over old-school
+   Autor: den_yes
+   Fonte: OpenGameArt — Game Over Sound (Old School)
+   Licença: CC0
+   https://opengameart.org/content/game-over-soundold-school
+
+Observação técnica:
+Os SFX externos têm fallback automático para os WAV locais do ZIP. Assim, o jogo
+continua funcionando quando aberto offline pelo ABRIR-JOGO.bat ou quando uma origem
+externa estiver indisponível.

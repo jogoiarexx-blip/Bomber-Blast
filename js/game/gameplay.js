@@ -47,7 +47,10 @@ BB.tryKick=function(nx,ny,dx,dy){const g=BB.game,b=g.bombs.find(b=>b.x===nx&&b.y
 BB.damagePlayer=function(cause='contact'){const g=BB.game;if(!g||g.inv>0||g.status!=='playing'||g.pendingRespawn>0||g.pendingGameOver>0)return;if(cause==='blast'&&g.flamePass){g.inv=250;return}if(g.shield>0){g.shield--;g.inv=1100;BB.addText(g.player.x,g.player.y,'ESCUDO!','#62f5ff');BB.Audio.play('powerup');return}g.lives--;g.stats.damage++;g.inv=1800;g.combo=0;BB.shake=12;BB.flash=150;BB.Audio.play('hurt');navigator.vibrate?.([70,30,70]);if(g.lives<=0){g.lives=0;BB.setPlayerAction('dead',900);g.pendingGameOver=900;BB.addText(g.player.x,g.player.y,'DERROTADO','#ff5578');return}BB.setPlayerAction('hurt',700);g.pendingRespawn=700;BB.addText(g.player.x,g.player.y,'-1 VIDA','#ff5578')};
 
 BB.blastRay=function(b){const g=BB.game,out=[{x:b.x,y:b.y,core:true,dx:0,dy:0,end:false}],dirs=Object.values(BB.DIRS).slice();if(b.nova)dirs.push([1,1],[1,-1],[-1,1],[-1,-1]);for(const [dx,dy] of dirs){for(let n=1;n<=b.range;n++){const x=b.x+dx*n,y=b.y+dy*n,cell=g.grid[y]?.[x];if(cell==null||cell===1)break;const brick=cell===2;out.push({x,y,core:false,dx,dy,brick,end:n===b.range||(brick&&!b.pierce)});if(brick&&!b.pierce)break}}return out};
-BB.dangerSet=function(){const g=BB.game,set=new Set(g.blasts.map(BB.key));for(const b of g.bombs){if(b.timer>850)continue;for(const t of BB.blastRay(b))set.add(BB.key(t))}for(const h of g.hazards)set.add(BB.key(h));return set};
+BB.dangerSet=function(horizon){const g=BB.game,set=new Set(g.blasts.map(BB.key)),limit=horizon??(BB.CONFIG[BB.difficulty]?.dangerHorizon||850);for(const b of g.bombs){if(b.timer>limit)continue;for(const t of BB.blastRay(b))set.add(BB.key(t))}for(const h of g.hazards)set.add(BB.key(h));return set};
+BB.enemyNeighbors=function(x,y,kind){return Object.values(BB.DIRS).map(([dx,dy])=>({x:x+dx,y:y+dy})).filter(p=>BB.walkable(p.x,p.y,kind,'enemy')).length};
+BB.predictPlayer=function(){const g=BB.game,p=g.player,[dx,dy]=BB.DIRS[p.facing]||[0,0],nx=p.x+dx,ny=p.y+dy;return BB.walkable(nx,ny,'','player')?{x:nx,y:ny}:{x:p.x,y:p.y}};
+BB.shouldEnemyBomb=function(e){const g=BB.game,cfg=BB.CONFIG[BB.difficulty],dist=Math.abs(e.x-g.player.x)+Math.abs(e.y-g.player.y);if(BB.difficulty==='easy')return dist<=3&&Math.random()<cfg.bombChance;if(BB.difficulty==='normal')return dist<=4&&Math.random()<cfg.bombChance;const danger=BB.dangerSet(cfg.dangerHorizon);if(danger.has(BB.key(e)))return false;const escape=Object.values(BB.DIRS).some(([dx,dy])=>{const x=e.x+dx,y=e.y+dy;return BB.walkable(x,y,e.kind,'enemy')&&!danger.has(`${x},${y}`)});return escape&&dist<=5&&Math.random()<cfg.bombChance};
 
 BB.killEnemy=function(e){const g=BB.game,constDead=e.boss?980:520;e.deadTimer=constDead;g.deadEnemies.push({...e,deadTimer:constDead});g.enemies=g.enemies.filter(x=>x!==e);g.stats.kills++;BB.Audio.play('enemy_die');BB.burst(e.x,e.y,e.boss?'#ffc849':'#ff5277',e.boss?36:12,e.boss?180:150);if(e.boss){BB.shake=Math.max(BB.shake,18);BB.flash=200;BB.addText(e.x,e.y,'BOSS DERROTADO!','#ffe270')}};
 BB.damageEnemy=function(enemy,amount,sourceId){enemy.hitSources=enemy.hitSources||{};if(enemy.hitSources[sourceId])return false;enemy.hitSources[sourceId]=1;enemy.hp-=amount;enemy.hit=550;BB.Audio.play(enemy.boss?'boss_hit':'explosion',enemy.boss?.5:.32);BB.addText(enemy.x,enemy.y,enemy.hp>0?'-1':'KO!',enemy.boss?'#ffe267':'#ff8aa0');if(enemy.boss){const ratio=enemy.hp/enemy.maxHp;enemy.phase=ratio<=.34?3:ratio<=.67?2:1}return enemy.hp<=0};
@@ -65,7 +68,48 @@ BB.objectiveSatisfied=function(){const g=BB.game,d=g.def;if(g.portalPenalty&&g.e
 BB.updateObjective=function(dt){const g=BB.game;if(g.def.objective==='survive'&&!g.objectiveComplete)g.surviveElapsed+=dt;if(!g.objectiveComplete&&BB.objectiveSatisfied()){g.objectiveComplete=true;g.score+=500;BB.addText(g.player.x,g.player.y,'OBJETIVO COMPLETO!','#ffe270');if(g.exit)g.exit.locked=false;BB.Audio.play('portal')}};
 BB.spawnExit=function(){const g=BB.game;if(g.exitRevealed&&!g.exit)g.exit={x:g.exitSpot.x,y:g.exitSpot.y,phase:0,locked:!g.objectiveComplete}};
 
-BB.enemyMove=function(e){const g=BB.game,danger=BB.dangerSet();let opts=Object.entries(BB.DIRS).map(([name,[dx,dy]])=>({name,x:e.x+dx,y:e.y+dy,dx,dy})).filter(p=>BB.walkable(p.x,p.y,e.kind,'enemy'));if(!opts.length)return;const smart=['hunter','boss','bomber','ghost'].includes(e.kind);if(smart){const safe=opts.filter(p=>!danger.has(`${p.x},${p.y}`));if(safe.length)opts=safe}if(e.kind==='slime'&&Math.random()<.3){const p=opts[Math.floor(Math.random()*opts.length)],jx=e.x+p.dx*2,jy=e.y+p.dy*2;if(BB.walkable(jx,jy,e.kind,'enemy')&&!danger.has(`${jx},${jy}`)){e.x=jx;e.y=jy;return}}if(['hunter','boss','bomber'].includes(e.kind))opts.sort((a,b)=>(Math.abs(a.x-g.player.x)+Math.abs(a.y-g.player.y))-(Math.abs(b.x-g.player.x)+Math.abs(b.y-g.player.y)));const p=['hunter','boss','bomber'].includes(e.kind)?opts[0]:opts[Math.floor(Math.random()*opts.length)];e.x=p.x;e.y=p.y;e.facing=p.name};
+BB.enemyMove=function(e){
+  const g=BB.game,cfg=BB.CONFIG[BB.difficulty],danger=BB.dangerSet(cfg.dangerHorizon);
+  let opts=Object.entries(BB.DIRS).map(([name,[dx,dy]])=>({name,x:e.x+dx,y:e.y+dy,dx,dy})).filter(p=>BB.walkable(p.x,p.y,e.kind,'enemy'));
+  if(!opts.length)return;
+
+  // Fácil: inimigos distraídos, pouca leitura de bombas e perseguição inconsistente.
+  if(cfg.ai==='weak'){
+    if(Math.random()<.22){const safe=opts.filter(p=>!danger.has(`${p.x},${p.y}`));if(safe.length)opts=safe}
+    const chase=['hunter','boss','bomber'].includes(e.kind)&&Math.random()<cfg.chaseChance;
+    if(chase)opts.sort((a,b)=>(Math.abs(a.x-g.player.x)+Math.abs(a.y-g.player.y))-(Math.abs(b.x-g.player.x)+Math.abs(b.y-g.player.y)));
+    const p=chase?opts[0]:opts[Math.floor(Math.random()*opts.length)];e.x=p.x;e.y=p.y;e.facing=p.name;return;
+  }
+
+  // Normal: evita perigos próximos e alterna entre perseguição e movimentação orgânica.
+  if(cfg.ai==='normal'){
+    const safe=opts.filter(p=>!danger.has(`${p.x},${p.y}`));if(safe.length&&Math.random()<.82)opts=safe;
+    if(e.kind==='slime'&&Math.random()<.26){const p=opts[Math.floor(Math.random()*opts.length)],jx=e.x+p.dx*2,jy=e.y+p.dy*2;if(BB.walkable(jx,jy,e.kind,'enemy')&&!danger.has(`${jx},${jy}`)){e.x=jx;e.y=jy;return}}
+    const chase=['hunter','boss','bomber','ghost'].includes(e.kind)&&Math.random()<cfg.chaseChance;
+    if(chase)opts.sort((a,b)=>(Math.abs(a.x-g.player.x)+Math.abs(a.y-g.player.y))-(Math.abs(b.x-g.player.x)+Math.abs(b.y-g.player.y)));
+    const p=chase?opts[0]:opts[Math.floor(Math.random()*opts.length)];e.x=p.x;e.y=p.y;e.facing=p.name;return;
+  }
+
+  // Difícil: IA preditiva, evita explosões futuras, becos sem saída e tenta cortar a rota do jogador.
+  const target=BB.predictPlayer(),currentDanger=danger.has(BB.key(e));
+  const scored=opts.map(p=>{
+    const dist=Math.abs(p.x-target.x)+Math.abs(p.y-target.y),safe=!danger.has(`${p.x},${p.y}`),exits=BB.enemyNeighbors(p.x,p.y,e.kind);
+    const crowd=g.enemies.filter(o=>o!==e&&Math.abs(o.x-p.x)+Math.abs(o.y-p.y)<=1).length;
+    let score=0;
+    score+=safe?70:-130;
+    score+=currentDanger&&safe?90:0;
+    score+=(4-dist)*12;
+    score+=Math.min(3,exits)*13;
+    score-=exits<=1?42:0;
+    score-=crowd*16;
+    if(e.kind==='hunter')score+=(5-dist)*9;
+    if(e.kind==='ghost'&&g.grid[p.y]?.[p.x]===2)score+=18;
+    if(e.kind==='tank')score+=safe?10:0;
+    score+=Math.random()*8;
+    return {...p,score};
+  }).sort((a,b)=>b.score-a.score);
+  const p=scored[0];e.x=p.x;e.y=p.y;e.facing=p.name;
+};
 
 BB.rayAttack=function(e,dx,dy,len,tiles){for(let n=1;n<=len;n++){const x=e.x+dx*n,y=e.y+dy*n,cell=BB.game.grid[y]?.[x];if(cell==null||cell===1||cell===2)break;if(!tiles.some(t=>t.x===x&&t.y===y))tiles.push({x,y})}};
 BB.bossAttack=function(e){const g=BB.game,w=BB.worldIndex(g.level),tiles=[];e.attackTimer=780;e.attackDuration=780;e.attackStyle=['crystal','frost','sand','void'][w]||'boss';if(w===0){Object.values(BB.DIRS).forEach(([dx,dy])=>BB.rayAttack(e,dx,dy,1+e.phase,tiles));if(e.phase===3){const dx=Math.sign(g.player.x-e.x),dy=Math.sign(g.player.y-e.y);if(BB.walkable(e.x+dx,e.y+dy,e.kind,'enemy')){e.x+=dx;e.y+=dy}}}if(w===1){[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([dx,dy])=>BB.rayAttack(e,dx,dy,1+e.phase,tiles));if(e.phase>=2)for(let i=0;i<2;i++){const x=1+Math.floor(Math.random()*(BB.COLS-2)),y=1+Math.floor(Math.random()*(BB.ROWS-2));if(g.grid[y][x]===0)g.grid[y][x]=2}}if(w===2){const dx=Math.sign(g.player.x-e.x)||1,dy=Math.sign(g.player.y-e.y)||1;BB.rayAttack(e,dx,0,3+e.phase,tiles);BB.rayAttack(e,0,dy,3+e.phase,tiles);if(e.phase>=2){const spots=[];for(let y=1;y<BB.ROWS-1;y++)for(let x=1;x<BB.COLS-1;x++)if(g.grid[y][x]===0)spots.push({x,y});const p=spots[Math.floor(Math.random()*spots.length)];if(p){e.x=p.x;e.y=p.y;e.rx=p.x;e.ry=p.y}}}if(w===3){[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([dx,dy])=>BB.rayAttack(e,dx,dy,1+e.phase,tiles));if(e.phase>=2)for(let i=0;i<e.phase;i++){const p={x:1+Math.floor(Math.random()*(BB.COLS-2)),y:1+Math.floor(Math.random()*(BB.ROWS-2))};if(g.grid[p.y][p.x]===0)g.enemies.push({...p,rx:p.x,ry:p.y,id:BB.serial++,kind:'ghost',hp:1,maxHp:1,boss:false,timer:600,special:0,hit:0,phase:1,frame:0,facing:'left',hitSources:{},deadTimer:0,attackTimer:0,attackDuration:0,attackStyle:'idle'})}}g.hazards.push(...tiles.map(t=>({...t,ttl:850,max:850})));BB.shake=Math.max(BB.shake,10);BB.flash=120;BB.addText(e.x,e.y,`ATAQUE FASE ${e.phase}!`,'#ff5dd7')};
@@ -79,7 +123,7 @@ g.player.rx=BB.lerp(g.player.rx,g.player.x,Math.min(1,dt*.018));g.player.ry=BB.l
 g.bombs.forEach(b=>{b.timer-=dt;b.pulse+=dt*.014});BB.updateBombMotion(dt);g.blasts.forEach(b=>b.ttl-=dt);g.blasts=g.blasts.filter(b=>b.ttl>0);g.breakingBricks.forEach(b=>b.ttl-=dt);g.breakingBricks=g.breakingBricks.filter(b=>b.ttl>0);g.deadEnemies.forEach(e=>e.deadTimer-=dt);g.deadEnemies=g.deadEnemies.filter(e=>e.deadTimer>0);const trig=g.hazards.filter(h=>{h.ttl-=dt;return h.ttl<=0});g.hazards=g.hazards.filter(h=>h.ttl>0);for(const h of trig){g.blasts.push({...h,ttl:520,max:520,hostile:true,core:true,sourceId:'haz-'+BB.serial++});if(BB.same(h,g.player))BB.damagePlayer('blast')}g.powers.forEach(p=>p.phase+=dt*.005);if(g.exit)g.exit.phase+=dt*.006;g.enemies.forEach(e=>{e.rx=BB.lerp(e.rx,e.x,Math.min(1,dt*.014));e.ry=BB.lerp(e.ry,e.y,Math.min(1,dt*.014));e.frame+=dt*.01;e.hit=Math.max(0,e.hit-dt);e.attackTimer=Math.max(0,(e.attackTimer||0)-dt)});
 if(g.time<=0&&g.pendingGameOver<=0){g.lives=0;BB.setPlayerAction('dead',900);g.pendingGameOver=900;BB.addText(g.player.x,g.player.y,'TEMPO ESGOTADO','#ffcf61')}
 BB.explodeDue();BB.updateObjective(dt);const direction=BB.Input.dir();if(direction&&g.moveTimer<=0&&!BB.isPlayerBusy()){const [dx,dy]=BB.DIRS[direction],nx=g.player.x+dx,ny=g.player.y+dy;g.player.facing=direction;if(!BB.walkable(nx,ny,'','player'))BB.tryKick(nx,ny,dx,dy);if(BB.walkable(nx,ny,'','player')){g.player.x=nx;g.player.y=ny;g.moveTimer=g.moveDelay;BB.Audio.play('step',.08);BB.collectPower();if(g.exit&&BB.same(g.player,g.exit)&&!g.exit.locked){g.score+=Math.ceil(g.time/1000)*5;BB.grantReward();BB.finish(g.level>=BB.MAX_LEVEL?'completed':'won');return}else if(g.exit&&BB.same(g.player,g.exit)&&g.exit.locked)BB.addText(g.exit.x,g.exit.y,'PORTAL BLOQUEADO','#ff5578')}}
-if(g.freeze<=0)for(const e of g.enemies){e.timer-=dt;e.special-=dt;if(e.boss&&e.special<=0){BB.bossAttack(e);e.special=Math.max(1000,3000-e.phase*350-BB.worldIndex(g.level)*150)}if(e.kind==='bomber'&&e.special<=0){BB.putBomb('enemy',e.x,e.y);e.special=3000}if(e.timer<=0){BB.enemyMove(e);const mult=e.kind==='tank'?1.35:e.kind==='hunter'?.9:e.kind==='ghost'?.95:e.boss?.8:1;e.timer=Math.max(190,(BB.CONFIG[BB.difficulty].delay-g.level*5)*mult)}}for(const e of [...g.enemies])for(const b of g.blasts)if(!b.hostile&&BB.same(e,b)){const dead=BB.damageEnemy(e,1,b.sourceId||('blast-'+b.x+'-'+b.y));if(dead){BB.killEnemy(e);g.score+=150}break}if(g.blasts.some(b=>BB.same(b,g.player))||g.enemies.some(e=>BB.same(e,g.player)))BB.damagePlayer(g.blasts.some(b=>BB.same(b,g.player))?'blast':'contact');BB.spawnExit();BB.UI.sync()};
+if(g.freeze<=0)for(const e of g.enemies){const cfg=BB.CONFIG[BB.difficulty];e.timer-=dt;e.special-=dt;if(e.boss&&e.special<=0){BB.bossAttack(e);e.special=Math.max(850,(3000-e.phase*350-BB.worldIndex(g.level)*150)*cfg.bossRate)}if(e.kind==='bomber'&&e.special<=0){if(BB.shouldEnemyBomb(e))BB.putBomb('enemy',e.x,e.y);e.special=BB.difficulty==='easy'?5200:BB.difficulty==='normal'?3500:2350}if(e.timer<=0){if(BB.difficulty!=='easy'||Math.random()>.12)BB.enemyMove(e);const mult=e.kind==='tank'?1.35:e.kind==='hunter'?.9:e.kind==='ghost'?.95:e.boss?.8:1;e.timer=Math.max(BB.difficulty==='hard'?155:210,(cfg.delay-g.level*5)*mult)}}for(const e of [...g.enemies])for(const b of g.blasts)if(!b.hostile&&BB.same(e,b)){const dead=BB.damageEnemy(e,1,b.sourceId||('blast-'+b.x+'-'+b.y));if(dead){BB.killEnemy(e);g.score+=150}break}if(g.blasts.some(b=>BB.same(b,g.player))||g.enemies.some(e=>BB.same(e,g.player)))BB.damagePlayer(g.blasts.some(b=>BB.same(b,g.player))?'blast':'contact');BB.spawnExit();BB.UI.sync()};
 
 BB.grantReward=function(){const g=BB.game;g.time+=5000;let reward='+5 SEGUNDOS';if(g.level%5===0){g.lives=BB.clamp(g.lives+1,1,7);g.speedLevel=BB.clamp(g.speedLevel+1,1,7);g.moveDelay=Math.max(72,150-(g.speedLevel-1)*12);reward='CHEFE: +1 VIDA E VELOCIDADE'}else if(g.level%4===0){g.maxBombs=BB.clamp(g.maxBombs+1,1,7);reward='NÚCLEO: +1 BOMBA'}else if(g.level%3===0){g.range=BB.clamp(g.range+1,2,9);reward='NÚCLEO: +1 ALCANCE'}g.lastReward=reward};
 BB.resultData=function(){const g=BB.game,remaining=Math.ceil(g.time/1000),scoreBonus=remaining*5+g.stats.kills*50+g.stats.bricks*10+g.stats.maxCombo*100,total=g.score+scoreBonus;const grade=scoreBonus>1800?'S':scoreBonus>1100?'A':scoreBonus>650?'B':'C';return{remaining,kills:g.stats.kills,bricks:g.stats.bricks,powers:g.stats.powers,combo:g.stats.maxCombo,bonus:scoreBonus,total,grade}};
