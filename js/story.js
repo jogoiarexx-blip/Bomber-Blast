@@ -11,3 +11,8 @@ window.BOMBER_STORY={
 16:{title:'ABISMO VIOLETA',pages:[{speaker:'NARRADOR',text:'Três Núcleos recuperados. Resta atravessar o Abismo Violeta e encarar o responsável pela corrupção.'}]},
 20:{title:'REI DO VAZIO',pages:[{speaker:'REI DO VAZIO',text:'Vinte portais. Quatro mundos. Seis pontos de vida me separam da queda.'},{speaker:'BOMBER',text:'Então faltam só seis explosões.'}]},
 default:{title:'A JORNADA CONTINUA',pages:[{speaker:'NARRADOR',text:'O mundo continua o mesmo, mas cada fase traz inimigos e recompensas novas.'}]}}
+
+;(()=>{
+  const css=document.createElement('link');css.rel='stylesheet';css.href='css/v065-patch.css?v=065';document.head.appendChild(css);
+  const js=document.createElement('script');js.src='js/v065-patch.js?v=065';js.async=false;document.head.appendChild(js);
+})();
