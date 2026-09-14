@@ -2,7 +2,7 @@ param([int]$Port=8765)
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback,$Port)
 try { $listener.Start() } catch { exit 2 }
-$types=@{'.html'='text/html; charset=utf-8';'.js'='application/javascript; charset=utf-8';'.css'='text/css; charset=utf-8';'.png'='image/png';'.wav'='audio/wav';'.txt'='text/plain; charset=utf-8'}
+$types=@{'.html'='text/html; charset=utf-8';'.js'='application/javascript; charset=utf-8';'.css'='text/css; charset=utf-8';'.png'='image/png';'.webp'='image/webp';'.ogg'='audio/ogg';'.svg'='image/svg+xml';'.wav'='audio/wav';'.txt'='text/plain; charset=utf-8'}
 while ($true) {
   $client = $listener.AcceptTcpClient()
   try {

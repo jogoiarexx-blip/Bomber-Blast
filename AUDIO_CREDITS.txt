@@ -1,9 +1,10 @@
-BOMBER BLAST v0.5.0 — FONTES DE ÁUDIO
+BOMBER BLAST v0.6.1 — FONTES DE ÁUDIO
 
-O jogo usa arquivos locais como fallback offline e, quando há conexão, tenta carregar
-alguns SFX CC0 selecionados para dar mais personalidade arcade/pixel ao áudio.
+Nesta versão, todo o áudio usado pelo jogo fica armazenado localmente no ZIP.
+Não há dependência de URLs externas durante a partida. Os arquivos foram convertidos
+para OGG para reduzir tamanho e manter funcionamento offline.
 
-SFX CC0 selecionados:
+SFX CC0 / fontes usadas no pacote de áudio:
 
 1. Explosão 8-bit
    Autor: Luke.RUSTLTD
@@ -37,10 +38,9 @@ SFX CC0 selecionados:
 
 6. Clique de interface
    Autor: Kenney
-   Fonte: Kenney UI Audio / GitHub mirror by Calinou
+   Fonte: Kenney UI Audio
    Licença: CC0 1.0
    https://kenney.nl/assets/ui-audio
-   https://github.com/Calinou/kenney-ui-audio
 
 7. Game Over old-school
    Autor: den_yes
@@ -48,7 +48,7 @@ SFX CC0 selecionados:
    Licença: CC0
    https://opengameart.org/content/game-over-soundold-school
 
-Observação técnica:
-Os SFX externos têm fallback automático para os WAV locais do ZIP. Assim, o jogo
-continua funcionando quando aberto offline pelo ABRIR-JOGO.bat ou quando uma origem
-externa estiver indisponível.
+OTIMIZAÇÃO v0.6.1
+- Música: OGG local.
+- Efeitos: OGG local.
+- Nenhum download é necessário durante o jogo.

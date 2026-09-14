@@ -1,0 +1,63 @@
+BOMBER BLAST v0.6.1 — ROADMAP CONSOLIDADO
+
+ARQUITETURA
+- SaveManager versionado: progresso, ranks, configurações e controles em um único save.
+- AssetManager com cache, contagem de carregamento/falhas e espera por assets do mundo.
+- Carregamento sob demanda de tiles, mini-chefe e boss do mundo atual.
+- Auto-teste de sistemas principais no boot.
+- Remoção de sprites fallback duplicados sem uso.
+
+IA
+- Pathfinding BFS.
+- Mapa temporal de perigo.
+- Previsão de reação em cadeia de bombas.
+- Estado de fuga, perseguição e patrulha.
+- IA difícil evita becos e só usa bomba se encontrar rota de fuga.
+- Perfis de Fácil/Normal/Difícil mais separados em velocidade, reação, bombas, vidas e tempo.
+
+GAMEPLAY / FEEDBACK
+- Hit-stop ao acertar inimigos e bosses.
+- Zoom/câmera na apresentação de chefe.
+- Objetivo apresentado no início da fase.
+- Survival com ondas progressivas.
+- Sequência de entrada no portal antes do resultado.
+- Explosão diagonal dedicada para Nova.
+- Nota agora considera no-damage e balanceamento novo de bônus.
+- Melhor rank/score salvo por fase.
+
+BATTLE
+- 6 arenas.
+- Seleção de arena no menu.
+- Power-ups em Battle.
+- Alcance, bomba, velocidade, chute e escudo.
+- Chute de bomba.
+- Skins P1/P2/P3/P4 como assets próprios.
+- Gamepads mantidos.
+- Tiles e biomas próprios por arena.
+
+GRÁFICOS / ASSETS
+- Sprites convertidos para WebP lossless.
+- 3 variações seamless de chão por mundo.
+- Chão especial das arenas de boss.
+- Mini-chefes com assets próprios por mundo.
+- Tiles de mundo carregados só quando necessários.
+
+ÁUDIO
+- Removida dependência de URLs externas durante a partida.
+- Música e SFX 100% locais.
+- Conversão WAV -> OGG.
+- Volume Geral, Música e Efeitos independentes.
+- Variação sutil de pitch em SFX repetidos.
+
+INTERFACE / ACESSIBILIDADE
+- Aba Como Jogar.
+- Remapeamento de teclado da campanha.
+- Suporte de gamepad na campanha.
+- Pause: continuar, reiniciar, configurações e menu.
+- Configurações preservadas no save versionado.
+- Resolução apresentada corretamente como escala/upscale do canvas lógico.
+
+OTIMIZAÇÃO
+- Assets de áudio caíram de cerca de 2,2 MB em WAV para menos de 400 KB em OGG.
+- Sprites WebP e remoção de duplicações reduziram o pacote gráfico.
+- Qualidade Baixa mantém alvo de render reduzido e menos partículas.

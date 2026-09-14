@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#07101f">
-  <title>Bomber Blast v0.5.0</title>
+  <title>Bomber Blast v0.6.1</title>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/menu.css">
   <link rel="stylesheet" href="css/story.css">
@@ -12,13 +12,14 @@
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
+<div id="assetLoader" class="asset-loader" hidden><div><b>CARREGANDO</b><span id="assetLoaderText">Preparando assets...</span><i></i></div></div>
 <main id="app">
   <section id="menu" class="panel panel-menu">
     <button id="sound" class="icon" aria-label="Alternar som">🔊</button>
     <div class="menu-shell">
       <div class="menu-visual-column">
         <div class="menu-brand-panel">
-          <p class="eyebrow">LABIRINTO ARCADE · v0.5.0</p>
+          <p class="eyebrow">LABIRINTO ARCADE · v0.6.1</p>
           <img class="menu-logo-art" src="assets/ui/logo-bomber-blast.svg" alt="Bomber Blast">
           <p class="lead">Exploda seu caminho por 20 fases em quatro mundos, enfrente mini-chefes e chefes em múltiplas fases, colete power-ups clássicos e dispute o modo Battle local.</p>
           <div class="records"><span>🏆 RECORDE <b id="record">0</b></span><span>🚩 MELHOR FASE <b id="bestLevel">1</b></span></div>
@@ -30,21 +31,21 @@
           </div>
           <div class="menu-stage">
             <div class="stage-floor"></div>
-            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w1">
-            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w2">
-            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w3">
-            <img src="assets/sprites/world/wall_1.png" alt="" class="stage-wall w4">
-            <img src="assets/sprites/world/brick_1.png" alt="" class="stage-brick b1">
-            <img src="assets/sprites/world/brick_1.png" alt="" class="stage-brick b2">
-            <img src="assets/sprites/world/brick_1.png" alt="" class="stage-brick b3">
-            <img src="assets/sprites/fx/bomb_1.png" alt="" class="stage-bomb bomb-a">
-            <img src="assets/sprites/fx/blast_center.png" alt="" class="stage-blast">
-            <img src="assets/sprites/player/right_1.png" alt="" class="stage-player">
-            <img src="assets/sprites/enemy_anim/bug_1.png" alt="" class="stage-enemy enemy-a">
-            <img src="assets/sprites/enemy_anim/slime_2.png" alt="" class="stage-enemy enemy-b">
-            <img src="assets/sprites/enemy_anim/tank_0.png" alt="" class="stage-enemy enemy-c">
-            <img src="assets/sprites/power/range.png" alt="" class="stage-power power-a">
-            <img src="assets/sprites/power/remote.png" alt="" class="stage-power power-b">
+            <img src="assets/sprites/world/wall_1.webp" alt="" class="stage-wall w1">
+            <img src="assets/sprites/world/wall_1.webp" alt="" class="stage-wall w2">
+            <img src="assets/sprites/world/wall_1.webp" alt="" class="stage-wall w3">
+            <img src="assets/sprites/world/wall_1.webp" alt="" class="stage-wall w4">
+            <img src="assets/sprites/world/brick_1.webp" alt="" class="stage-brick b1">
+            <img src="assets/sprites/world/brick_1.webp" alt="" class="stage-brick b2">
+            <img src="assets/sprites/world/brick_1.webp" alt="" class="stage-brick b3">
+            <img src="assets/sprites/fx/bomb_1.webp" alt="" class="stage-bomb bomb-a">
+            <img src="assets/sprites/fx/blast_center.webp" alt="" class="stage-blast">
+            <img src="assets/sprites/player/right_1.webp" alt="" class="stage-player">
+            <img src="assets/sprites/enemy_anim/bug_1.webp" alt="" class="stage-enemy enemy-a">
+            <img src="assets/sprites/enemy_anim/slime_2.webp" alt="" class="stage-enemy enemy-b">
+            <img src="assets/sprites/enemy_anim/tank_0.webp" alt="" class="stage-enemy enemy-c">
+            <img src="assets/sprites/power/range.webp" alt="" class="stage-power power-a">
+            <img src="assets/sprites/power/remote.webp" alt="" class="stage-power power-b">
           </div>
           <div class="feature-strip">
             <div class="feature-chip"><strong>HISTÓRIA</strong><span>Campanha progressiva com objetivos variados.</span></div>
@@ -56,7 +57,7 @@
       <div class="menu-controls-column">
         <div class="menu-tabs">
           <button type="button" class="menu-tab-btn active" data-menu-tab="campaign">JOGAR</button>
-          <button type="button" class="menu-tab-btn" data-menu-tab="settings">CONFIGURAÇÕES</button>
+          <button type="button" class="menu-tab-btn" data-menu-tab="settings">CONFIGURAÇÕES</button><button type="button" class="menu-tab-btn" data-menu-tab="howto">COMO JOGAR</button>
         </div>
 
         <div class="menu-tab-panel active" data-menu-panel="campaign">
@@ -78,7 +79,7 @@
 
         <div class="menu-tab-panel" data-menu-panel="settings" hidden>
           <div class="settings-card top-card">
-            <div class="card-title-row"><h2>Configurações</h2><span>Personalize o jogo</span></div>
+            <div class="card-title-row"><h2>Configurações</h2><span>Personalize o jogo</span></div><button id="resumePaused" class="resume-paused" hidden>← VOLTAR AO JOGO</button>
             <div class="settings-grid">
               <div class="setting-block">
                 <p class="label">RESOLUÇÃO / ESCALA DE TELA</p>
@@ -105,8 +106,29 @@
                 <label class="inline-select"><span>PARTIDA LOCAL</span><select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label>
               </div>
               <div class="setting-block">
+                <p class="label">ARENA DO BATTLE</p>
+                <label class="inline-select"><span>MAPA</span><select id="battleArena"><option value="0">Jardim Neon</option><option value="1">Circuito Fechado</option><option value="2">Gelo Cósmico</option><option value="3">Dunas Solares</option><option value="4">Abismo Violeta</option><option value="5">Arena Caótica</option></select></label>
+              </div>
+              <div class="setting-block">
                 <p class="label">CONTROLES MOBILE</p>
                 <div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
+              </div>
+              <div class="setting-block audio-settings">
+                <p class="label">ÁUDIO</p>
+                <label class="range-setting">GERAL <input id="masterVolume" type="range" min="0" max="100" step="1"></label>
+                <label class="range-setting">MÚSICA <input id="musicVolume" type="range" min="0" max="100" step="1"></label>
+                <label class="range-setting">EFEITOS <input id="sfxVolume" type="range" min="0" max="100" step="1"></label>
+              </div>
+              <div class="setting-block controls-settings">
+                <p class="label">CONTROLES DA CAMPANHA</p>
+                <div class="bind-grid">
+                  <button data-bind="up">CIMA <b>W</b></button><button data-bind="down">BAIXO <b>S</b></button>
+                  <button data-bind="left">ESQUERDA <b>A</b></button><button data-bind="right">DIREITA <b>D</b></button>
+                  <button data-bind="bomb">BOMBA <b>ESPAÇO</b></button><button data-bind="remote">REMOTA <b>Q</b></button>
+                  <button data-bind="throw">LUVA <b>E</b></button><button data-bind="restart">REINICIAR <b>R</b></button>
+                  <button data-bind="pause">PAUSA <b>ESC</b></button>
+                </div>
+                <p class="quality-info">Clique em uma ação e pressione a nova tecla. Conflitos são trocados automaticamente.</p>
               </div>
               <div class="setting-block settings-summary">
                 <p class="label">RESUMO</p>
@@ -116,6 +138,21 @@
                   <li><strong>Som:</strong> use o botão no canto superior direito.</li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="menu-tab-panel" data-menu-panel="howto" hidden>
+          <div class="settings-card howto-card">
+            <div class="card-title-row"><h2>Como Jogar</h2><span>Guia rápido</span></div>
+            <div class="howto-grid">
+              <article><b>1. MOVA-SE</b><p>Explore o labirinto, destrua bricks e evite encostar nos inimigos.</p></article>
+              <article><b>2. USE BOMBAS</b><p>Posicione bombas para abrir caminhos e derrotar inimigos. Reações em cadeia podem mudar toda a arena.</p></article>
+              <article><b>3. FIQUE FORA DO FOGO</b><p>Observe o pavio, rotas de fuga e o alcance da explosão antes de se prender em corredores.</p></article>
+              <article><b>4. COLETE POWER-UPS</b><p>Aumente alcance, quantidade de bombas, velocidade e desbloqueie chute, luva, remota e passes.</p></article>
+              <article><b>5. CUMPRA O OBJETIVO</b><p>Cada fase pode pedir limpeza, chaves, sobrevivência, bricks, mini-chefe ou boss.</p></article>
+              <article><b>6. USE O PORTAL</b><p>Encontre o portal escondido, complete o objetivo e entre nele para concluir a fase.</p></article>
+              <article><b>BATTLE</b><p>2 ou 4 jogadores. Destrua bricks, pegue power-ups e seja o último vivo. Primeiro a 3 rodadas vence. Nos últimos 30 segundos começa o Sudden Death e a arena se fecha progressivamente.</p></article>
+              <article><b>DIFICULDADE</b><p>Fácil tem IA simples. Normal reage ao perigo. Difícil usa pathfinding, prevê explosões e procura rotas seguras.</p></article>
             </div>
           </div>
         </div>
@@ -131,9 +168,9 @@
   </section>
 
   <section id="game" hidden>
-    <header><button id="back">‹ MENU</button><div><h2>BOMBER BLAST v0.5.0</h2><small id="theme">JARDIM NEON</small></div><div class="top-actions"><button id="mute">♪</button><button id="pause">Ⅱ</button></div></header>
+    <header><button id="back">‹ MENU</button><div><h2>BOMBER BLAST v0.6.1</h2><small id="theme">JARDIM NEON</small></div><div class="top-actions"><button id="mute">♪</button><button id="pause">Ⅱ</button></div></header>
     <div class="hud"><span><small>FASE</small><b id="level">1</b></span><span><small>VIDAS</small><b id="lives" class="hearts">♥♥♥</b></span><span><small>PONTOS</small><b id="score">00000</b></span><span><small>TEMPO</small><b id="time">03:00</b></span></div>
-    <div class="canvas-wrap"><canvas id="board" width="650" height="550"></canvas><div id="overlay" hidden><small id="overlayTop"></small><h2 id="overlayTitle"></h2><p id="overlayScore"></p><div id="resultStats" class="result-stats" hidden></div><div><button id="primary"></button><button id="overlayMenu">MENU</button></div></div></div>
+    <div class="canvas-wrap"><canvas id="board" width="650" height="550"></canvas><div id="overlay" hidden><small id="overlayTop"></small><h2 id="overlayTitle"></h2><p id="overlayScore"></p><div id="resultStats" class="result-stats" hidden></div><div><button id="primary"></button><button id="overlayRestart">REINICIAR</button><button id="overlaySettings">CONFIGURAÇÕES</button><button id="overlayMenu">MENU</button></div></div></div>
     <div class="stats"><span id="bombStat">💣 1</span><span id="fireStat">🔥 2</span><span id="speedStat">⚡ Nv.1</span><span id="powerStat">SEM PODER</span><span id="enemyStat">👾 0</span></div>
     <div class="controls"><div class="dpad"><i></i><button data-dir="up">↑</button><i></i><button data-dir="left">←</button><i></i><button data-dir="right">→</button><i></i><button data-dir="down">↓</button><i></i></div><div class="action-stack"><div class="special-stack"><button id="remoteButton" class="special-action">DET.<br>Q</button><button id="throwButton" class="special-action">LUVA<br>E</button></div><button id="bombButton" class="bomb-action"><b>💣</b>BOMBA</button></div></div>
     <p class="legend">Power-ups: alcance · bombas · velocidade · chute · luva · remota · perfurante · escudo · passa-bombas · passa-paredes · imune ao fogo</p>
@@ -146,14 +183,18 @@
   </section>
 </main>
 <script src="js/game/config.js"></script>
+<script src="js/systems/save.js"></script>
+<script src="js/systems/assets.js"></script>
 <script src="js/systems/audio.js"></script>
 <script src="js/game/levels.js"></script>
 <script src="js/entities/enemies.js"></script>
 <script src="js/systems/input.js"></script>
+<script src="js/systems/ai.js"></script>
 <script src="js/game/gameplay.js"></script>
 <script src="js/game/battle.js"></script>
 <script src="js/render/renderer.js"></script>
 <script src="js/systems/ui.js"></script>
+<script src="js/systems/selftest.js"></script>
 <script src="js/story.js"></script>
 <script src="js/main.js"></script>
 </body></html>

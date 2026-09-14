@@ -1,0 +1,24 @@
+BOMBER BLAST v0.6.1
+
+POLIMENTO E ESTABILIDADE
+- Corrigido spam de bombas causado por key repeat.
+- Corrigido input repetido no Battle.
+- Auto-pause ao trocar de janela ou aba.
+- D-pad e Start do gamepad suportados na campanha.
+- Loader exibe percentual real de assets carregados.
+- Remapeamento de teclado normaliza letras maiúsculas/minúsculas.
+
+BATTLE
+- Novo Sudden Death aos 30 segundos.
+- Paredes fecham a arena em espiral.
+- Bombas e power-ups são removidos quando uma parede cai sobre o tile.
+- Jogadores atingidos pela parede são eliminados.
+- Aviso visual e sonoro durante o Sudden Death.
+
+ÁUDIO
+- Limite global de vozes simultâneas para evitar clipping.
+- Sons antigos são liberados corretamente após tocar.
+- Clique de interface agora é sintetizado e não usa mais o SFX de colocar bomba.
+
+TESTES
+- Self-test ampliado para Asset Manager, Sudden Death e áudio local.

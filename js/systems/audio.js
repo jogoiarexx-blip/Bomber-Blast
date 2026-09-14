@@ -1,34 +1,13 @@
 window.BB=window.BB||{};
 BB.Audio={
-  sound:localStorage.getItem('bb-sound')!=='off',music:null,sfx:{},urgent:false,
-  localBase:'assets/audio/sfx/',
-  // SFX CC0 selecionados para combinar com a estética arcade/pixel. Quando a internet
-  // não estiver disponível ou a origem rejeitar a mídia, o jogo cai automaticamente
-  // nos arquivos locais do ZIP.
-  remote:{
-    explosion:'https://opengameart.org/sites/default/files/8bit_bomb_explosion.wav',
-    portal:'https://opengameart.org/sites/default/files/172206__fins__teleport.wav',
-    powerup:'https://opengameart.org/sites/default/files/power_up_sound_v1.ogg',
-    hurt:'https://opengameart.org/sites/default/files/playerhurt.wav',
-    enemy_die:'https://opengameart.org/sites/default/files/dead.wav',
-    throw:'https://opengameart.org/sites/default/files/throw.wav',
-    gameover:'https://opengameart.org/sites/default/files/GameOver.wav',
-    ui_click:'https://github.com/Calinou/kenney-ui-audio/raw/refs/heads/master/addons/kenney_ui_audio/click1.wav'
-  },
-  init(){
-    const names=['bomb_place','explosion','powerup','hurt','portal','boss_hit','win','step','brick_break','enemy_die','kick','throw','countdown','life','gameover','boss_intro','portal_hit','ui_click'];
-    names.forEach(n=>{
-      const local=`${this.localBase}${n==='ui_click'?'bomb_place':n}.wav`;
-      const a=new Audio();a.preload='auto';a.dataset.local=local;
-      const remote=navigator.onLine?this.remote[n]:null;
-      a.src=remote||local;
-      if(remote)a.onerror=()=>{a.onerror=null;a.src=local;a.load()};
-      this.sfx[n]=a;
-    });
-  },
-  play(name,vol=.55,rate=1){if(!this.sound)return;const a=this.sfx[name];if(!a)return;try{const c=a.cloneNode(true);c.volume=vol;c.playbackRate=rate;c.play().catch(()=>{const local=a.dataset.local;if(local&&c.src!==local){c.src=local;c.play().catch(()=>{})}})}catch{}},
-  musicFor(level,boss=false){if(!this.sound)return;const src=boss?'assets/audio/music/boss.wav':`assets/audio/music/world${BB.worldIndex(level)+1}.wav`;if(this.music?.dataset.src===src)return;this.stopMusic();const a=new Audio(src);a.dataset.src=src;a.loop=true;a.volume=.22;a.playbackRate=this.urgent?1.12:1;this.music=a;a.play().catch(()=>{})},
+  sound:true,music:null,sfx:{},urgent:false,masterVolume:.8,musicVolume:.45,sfxVolume:.8,activeVoices:new Set(),maxVoices:24,_ctx:null,
+  init(){this.sound=BB.Save?.get('settings.sound',true)!==false;this.masterVolume=BB.Save?.get('settings.masterVolume',.8)??.8;this.musicVolume=BB.Save?.get('settings.musicVolume',.45)??.45;this.sfxVolume=BB.Save?.get('settings.sfxVolume',.8)??.8;const names=['bomb_place','explosion','powerup','hurt','portal','boss_hit','win','step','brick_break','enemy_die','kick','throw','countdown','life','gameover','boss_intro','portal_hit'];for(const n of names){const a=new Audio(`assets/audio/sfx_ogg/${n}.ogg`);a.preload='auto';this.sfx[n]=a}},
+  uiClick(vol=.12){if(!this.sound)return;try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;this._ctx??=new Ctx();const ctx=this._ctx;if(ctx.state==='suspended')ctx.resume().catch(()=>{});const osc=ctx.createOscillator(),gain=ctx.createGain(),now=ctx.currentTime;osc.type='square';osc.frequency.setValueAtTime(520,now);osc.frequency.exponentialRampToValueAtTime(360,now+.035);gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(Math.max(.0002,vol*this.sfxVolume*this.masterVolume),now+.004);gain.gain.exponentialRampToValueAtTime(.0001,now+.045);osc.connect(gain).connect(ctx.destination);osc.start(now);osc.stop(now+.05)}catch{}},
+  play(name,vol=.55,rate=1){if(!this.sound)return;if(name==='ui_click'){this.uiClick(vol);return}const a=this.sfx[name];if(!a)return;if(this.activeVoices.size>=this.maxVoices){const oldest=this.activeVoices.values().next().value;try{oldest?.pause()}catch{}this.activeVoices.delete(oldest)}try{const c=a.cloneNode(true);c.volume=BB.clamp(vol*this.sfxVolume*this.masterVolume,0,1);c.playbackRate=BB.clamp(rate*(.97+Math.random()*.06),.6,1.65);this.activeVoices.add(c);const cleanup=()=>this.activeVoices.delete(c);c.onended=cleanup;c.onerror=cleanup;c.play().catch(cleanup)}catch{}},
+  musicFor(level,boss=false){if(!this.sound)return;const src=boss?'assets/audio/music_ogg/boss.ogg':`assets/audio/music_ogg/world${BB.worldIndex(level)+1}.ogg`;if(this.music?.dataset.src===src)return;this.stopMusic();const a=new Audio(src);a.dataset.src=src;a.loop=true;a.volume=BB.clamp(this.musicVolume*this.masterVolume,0,1);a.playbackRate=this.urgent?1.12:1;this.music=a;a.play().catch(()=>{})},
   setUrgency(on){if(this.urgent===on)return;this.urgent=on;if(this.music)this.music.playbackRate=on?1.12:1},
-  stopMusic(){if(this.music){this.music.pause();this.music=null}},
-  toggle(){this.sound=!this.sound;localStorage.setItem('bb-sound',this.sound?'on':'off');if(!this.sound)this.stopMusic();else if(BB.game)this.musicFor(BB.game.level,BB.game.level%5===0);BB.UI?.syncSound();return this.sound}
+  setVolume(kind,value){value=BB.clamp(Number(value),0,1);if(kind==='master')this.masterVolume=value;if(kind==='music')this.musicVolume=value;if(kind==='sfx')this.sfxVolume=value;BB.Save?.set(`settings.${kind}Volume`,value);if(this.music)this.music.volume=BB.clamp(this.musicVolume*this.masterVolume,0,1)},
+  stopMusic(){if(this.music){this.music.pause();this.music.src='';this.music=null}},
+  stopSfx(){for(const a of this.activeVoices){try{a.pause()}catch{}}this.activeVoices.clear()},
+  toggle(){this.sound=!this.sound;BB.Save?.set('settings.sound',this.sound);if(!this.sound){this.stopMusic();this.stopSfx()}else if(BB.game)this.musicFor(BB.game.level,BB.game.level%5===0);BB.UI?.syncSound();return this.sound}
 };

@@ -1,0 +1,13 @@
+window.BB=window.BB||{};
+BB.Save={
+  KEY:'bb-save-v1',VERSION:1,data:null,
+  defaults(){return{saveVersion:this.VERSION,progress:{bestLevel:1,record:0,ranks:{}},settings:{difficulty:'normal',quality:'high',mobile:'normal',resolution:'auto',battlePlayers:2,battleArena:0,masterVolume:.8,musicVolume:.45,sfxVolume:.8,sound:true},controls:{up:'w',down:'s',left:'a',right:'d',bomb:' ',remote:'q',throw:'e',restart:'r',pause:'Escape'}}},
+  load(){let d;try{d=JSON.parse(localStorage.getItem(this.KEY)||'null')}catch{};const base=this.defaults();if(!d||d.saveVersion!==this.VERSION)d=base;else d={...base,...d,progress:{...base.progress,...d.progress,ranks:{...base.progress.ranks,...(d.progress?.ranks||{})}},settings:{...base.settings,...(d.settings||{})},controls:{...base.controls,...(d.controls||{})}};this.migrateLegacy(d);this.data=d;this.flush();return d},
+  migrateLegacy(d){const best=+localStorage.getItem('bb-level')||0,rec=+localStorage.getItem('bb-record')||0;if(best>d.progress.bestLevel)d.progress.bestLevel=best;if(rec>d.progress.record)d.progress.record=rec;const q=localStorage.getItem('bb-quality'),diff=localStorage.getItem('bb-difficulty'),mob=localStorage.getItem('bb-mobile'),res=localStorage.getItem('bb-resolution'),bp=localStorage.getItem('bb-battlePlayers');if(q)d.settings.quality=q;if(diff)d.settings.difficulty=diff;if(mob)d.settings.mobile=mob;if(res)d.settings.resolution=res;if(bp)d.settings.battlePlayers=+bp||2;if(localStorage.getItem('bb-sound')==='off')d.settings.sound=false},
+  flush(){try{localStorage.setItem(this.KEY,JSON.stringify(this.data))}catch{}},
+  get(path,fallback){const parts=path.split('.');let v=this.data||this.load();for(const p of parts){if(v==null)return fallback;v=v[p]}return v??fallback},
+  set(path,value){const parts=path.split('.');let o=this.data||this.load();for(let i=0;i<parts.length-1;i++){o[parts[i]]??={};o=o[parts[i]]}o[parts.at(-1)]=value;this.flush();return value},
+  recordResult(level,result){const p=this.data.progress;p.record=Math.max(p.record,result.total||0);p.bestLevel=Math.max(p.bestLevel,Math.min(BB.MAX_LEVEL,level+1));const old=p.ranks[level]||{};const rankOrder={S:4,A:3,B:2,C:1};p.ranks[level]={grade:(rankOrder[result.grade]||0)>(rankOrder[old.grade]||0)?result.grade:(old.grade||result.grade),score:Math.max(old.score||0,result.total||0),time:Math.max(old.time||0,result.remaining||0),noDamage:!!old.noDamage||!BB.game?.stats?.damage};this.flush();localStorage.setItem('bb-record',p.record);localStorage.setItem('bb-level',p.bestLevel)},
+  resetProgress(){const d=this.defaults();this.data.progress=d.progress;this.flush()}
+};
+BB.Save.load();
