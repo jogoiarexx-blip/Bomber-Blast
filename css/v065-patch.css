@@ -1,0 +1,28 @@
+/* Bomber Blast v0.6.5 — menu mais limpo sobre a base v0.6.1 */
+#menu.panel-menu{background:linear-gradient(145deg,#0b1729f4,#07101dfa);border-color:#304866;box-shadow:0 28px 80px #000b;overflow:hidden}
+#menu.panel-menu:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 10%,#47dfff18,transparent 26%),radial-gradient(circle at 90% 8%,#52f4c812,transparent 22%),linear-gradient(180deg,#ffffff04,transparent 25%,#0004)}
+#menu .menu-shell{grid-template-columns:minmax(360px,.82fr) minmax(500px,1.18fr);gap:22px}
+#menu .menu-visual-column{position:relative;min-height:690px;border:1px solid #304766;border-radius:26px;overflow:hidden;background:linear-gradient(180deg,#07101f33,#06101be8),radial-gradient(circle at 70% 25%,#39cfff22,transparent 26%),url('../assets/sprites/world/floor_4_0.webp') center/180px repeat;box-shadow:inset 0 1px 0 #fff1,0 20px 45px #0007}
+#menu .menu-visual-column:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07101f18 0 45%,#06101bf5 82%);pointer-events:none}
+#menu .menu-brand-panel{position:absolute;z-index:2;left:0;right:0;bottom:0;margin:0;padding:30px;border:0;border-radius:0;background:linear-gradient(180deg,transparent,#07101bdc 16%,#07101ff7)}
+#menu .menu-stage-card{display:none!important}
+#menu .menu-logo-art{width:min(100%,460px);filter:drop-shadow(0 12px 22px #0009)}
+#menu .lead{max-width:520px;color:#d2e5f7;font-size:13px;line-height:1.75}
+#menu .records{grid-template-columns:1fr 1fr;margin-top:16px}
+#menu .records span{background:#081324dc;border-color:#37506e}
+#menu .records b{font-size:24px}
+#menu .menu-controls-column{gap:14px}
+#menu .menu-tabs{padding:7px;border-radius:20px}
+#menu .menu-tab-btn{min-height:48px;border-radius:14px;transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+#menu .menu-tab-btn:hover,#menu button:hover{transform:translateY(-1px);filter:brightness(1.06)}
+#menu .menu-tab-btn.active{background:linear-gradient(135deg,#52f4c9,#31bfff);color:#04151d;box-shadow:0 10px 25px #15d8c51f}
+#menu .settings-card{border-radius:22px;background:linear-gradient(180deg,#0b1628f3,#08111ff8);box-shadow:inset 0 1px 0 #fff1,0 16px 32px #0005}
+#menu .world-map{gap:8px}
+#menu .world-map button{min-height:52px;border-radius:13px}
+#menu .world-map button.selected{background:linear-gradient(135deg,#52f4c9,#42d8b7);color:#04151b}
+#menu .main-actions{gap:10px}
+#menu .play,#menu .battle-play{min-height:58px;border-radius:15px}
+#menu .play{background:linear-gradient(90deg,#51f3c8,#31c9ff);box-shadow:0 14px 26px #18d6c523}
+#menu .help{opacity:.8}
+@media(max-width:1080px){#menu .menu-shell{grid-template-columns:1fr}#menu .menu-visual-column{min-height:440px}#menu .menu-brand-panel{position:absolute}}
+@media(max-width:700px){#menu .menu-visual-column{min-height:360px}#menu .menu-brand-panel{padding:18px}#menu .records{grid-template-columns:1fr}#menu .menu-logo-art{max-width:320px}}
