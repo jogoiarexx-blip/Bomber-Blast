@@ -1,0 +1,6 @@
+Bomber Blast v0.6.12
+- passe final de consistência visual geral entre chão, wall e brick
+- pisos dos 4 mundos refeitos para combinar melhor com os walls e bricks
+- walls e bricks de cada mundo mantidos com identidade própria
+- assets em WEBP lossless 50x50
+- menu e correções anteriores preservados
