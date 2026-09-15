@@ -1,0 +1,5 @@
+Bomber Blast v0.6.8
+- corrigido o espaçamento feio entre os blocos do chão
+- os pisos azul e roxo foram recortados sem as bordas internas da grade
+- agora os tiles encaixam corretamente no game
+- mantidas as demais correções e o menu novo

@@ -1,0 +1,6 @@
+Bomber Blast v0.6.9
+- revisão visual completa de walls e bricks nos 4 mundos
+- walls e bricks agora usam paletas coerentes com cada piso/bioma
+- removidas margens transparentes que davam aparência de espaçamento entre blocos
+- sprites de wall e brick normalizados para 50x50 e WEBP lossless
+- preservado o novo menu principal e as correções anteriores

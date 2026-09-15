@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#07101f">
-  <title>Bomber Blast v0.6.7</title>
+  <title>Bomber Blast v0.6.9</title>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/menu.css">
   <link rel="stylesheet" href="css/story.css">
@@ -19,10 +19,9 @@
     <button id="sound" class="icon" aria-label="Alternar som">🔊</button>
     <div class="menu-stage">
       <div class="menu-overlay-panel">
-        <p class="eyebrow">UM JOGO DE LUIS PAULO ALVES · v0.6.7</p>
+        <p class="eyebrow">UM JOGO DE LUIS PAULO ALVES · v0.6.9</p>
         <img class="menu-logo-art" src="assets/ui/logo-bomber-blast.svg" alt="Bomber Blast">
         <p class="hero-tag">Arcade explosivo. Campanha. Battle local.</p>
-
         <div class="menu-action-list">
           <button id="play" class="menu-main-btn primary">INICIAR CAMPANHA</button>
           <button id="continuePlay" class="menu-main-btn">CONTINUAR</button>
@@ -31,150 +30,18 @@
           <button type="button" class="menu-main-btn nav-btn" data-menu-tab="battle">MODO BATTLE</button>
           <button type="button" class="menu-main-btn nav-btn" data-menu-tab="credits">CRÉDITOS</button>
         </div>
-
-        <div class="menu-tab-panel active" data-menu-panel="campaign">
-          <div class="content-card campaign-card">
-            <div class="stats-row">
-              <span>🏆 RECORDE <b id="record">0</b></span>
-              <span>🚩 MELHOR FASE <b id="bestLevel">1</b></span>
-            </div>
-            <label class="phase-picker">FASE SELECIONADA <select id="levelSelect"><option value="1">Fase 1</option></select></label>
-            <div id="worldMap" class="world-map"></div>
-            <p class="menu-help-inline">Escolha sua fase e pressione <b>INICIAR CAMPANHA</b>. Para retomar do progresso, use <b>CONTINUAR</b>.</p>
-          </div>
-        </div>
-
-        <div class="menu-tab-panel" data-menu-panel="settings" hidden>
-          <div class="content-card">
-            <div class="card-title-row card-title-split"><div><h2>Configurações</h2><span>Personalize o jogo</span></div><button id="resumePaused" class="resume-paused" hidden>← VOLTAR AO JOGO</button></div>
-            <div class="settings-grid">
-              <div class="setting-block">
-                <p class="label">RESOLUÇÃO / ESCALA DE TELA</p>
-                <div class="difficulties resolution-options">
-                  <button data-resolution="auto">AUTO</button>
-                  <button data-resolution="1080">1080P</button>
-                  <button data-resolution="720">720P</button>
-                  <button data-resolution="480">480P</button>
-                </div>
-                <p id="resolutionInfo" class="quality-info"></p>
-              </div>
-              <div class="setting-block">
-                <p class="label">DIFICULDADE</p>
-                <div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div>
-                <p id="difficultyInfo" class="quality-info"></p>
-              </div>
-              <div class="setting-block">
-                <p class="label">QUALIDADE GRÁFICA</p>
-                <div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div>
-                <p id="qualityInfo" class="quality-info"></p>
-              </div>
-              <div class="setting-block">
-                <p class="label">CONTROLES MOBILE</p>
-                <div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div>
-              </div>
-              <div class="setting-block audio-settings">
-                <p class="label">ÁUDIO</p>
-                <label class="range-setting">GERAL <input id="masterVolume" type="range" min="0" max="100" step="1"></label>
-                <label class="range-setting">MÚSICA <input id="musicVolume" type="range" min="0" max="100" step="1"></label>
-                <label class="range-setting">EFEITOS <input id="sfxVolume" type="range" min="0" max="100" step="1"></label>
-              </div>
-              <div class="setting-block controls-settings">
-                <p class="label">CONTROLES DA CAMPANHA</p>
-                <div class="bind-grid">
-                  <button data-bind="up">CIMA <b>W</b></button><button data-bind="down">BAIXO <b>S</b></button>
-                  <button data-bind="left">ESQUERDA <b>A</b></button><button data-bind="right">DIREITA <b>D</b></button>
-                  <button data-bind="bomb">BOMBA <b>ESPAÇO</b></button><button data-bind="remote">REMOTA <b>Q</b></button>
-                  <button data-bind="throw">LUVA <b>E</b></button><button data-bind="restart">REINICIAR <b>R</b></button>
-                  <button data-bind="pause">PAUSA <b>ESC</b></button>
-                </div>
-                <p class="quality-info">Clique em uma ação e pressione a nova tecla. Conflitos são trocados automaticamente.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="menu-tab-panel" data-menu-panel="howto" hidden>
-          <div class="content-card">
-            <div class="card-title-row"><h2>Como Jogar</h2><span>Guia rápido</span></div>
-            <div class="howto-grid">
-              <article><b>1. MOVA-SE</b><p>Explore o labirinto, destrua bricks e evite encostar nos inimigos.</p></article>
-              <article><b>2. USE BOMBAS</b><p>Posicione bombas para abrir caminhos e derrotar inimigos. Reações em cadeia podem mudar toda a arena.</p></article>
-              <article><b>3. FIQUE FORA DO FOGO</b><p>Observe o pavio, rotas de fuga e o alcance da explosão antes de se prender em corredores.</p></article>
-              <article><b>4. COLETE POWER-UPS</b><p>Aumente alcance, quantidade de bombas, velocidade e desbloqueie chute, luva, remota e passes.</p></article>
-              <article><b>5. CUMPRA O OBJETIVO</b><p>Cada fase pode pedir limpeza, chaves, sobrevivência, bricks, mini-chefe ou boss.</p></article>
-              <article><b>6. USE O PORTAL</b><p>Encontre o portal escondido, complete o objetivo e entre nele para concluir a fase.</p></article>
-            </div>
-          </div>
-        </div>
-
-        <div class="menu-tab-panel" data-menu-panel="battle" hidden>
-          <div class="content-card">
-            <div class="card-title-row"><h2>Modo Battle</h2><span>2 ou 4 jogadores</span></div>
-            <p class="subcopy">Monte a partida local, escolha a arena e inicie um confronto rápido.</p>
-            <div class="battle-config-grid">
-              <label class="inline-select"><span>JOGADORES</span><select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label>
-              <label class="inline-select"><span>ARENA</span><select id="battleArena"><option value="0">Jardim Neon</option><option value="1">Circuito Fechado</option><option value="2">Gelo Cósmico</option><option value="3">Dunas Solares</option><option value="4">Abismo Violeta</option><option value="5">Arena Caótica</option></select></label>
-            </div>
-            <button id="battlePlay" class="play battle-start-btn">INICIAR MODO BATTLE</button>
-          </div>
-        </div>
-
-        <div class="menu-tab-panel" data-menu-panel="credits" hidden>
-          <div class="content-card credits-card">
-            <div class="card-title-row"><h2>Créditos</h2><span>Projeto</span></div>
-            <div class="credits-lines">
-              <p><b>Desenvolvimento:</b> Luis Paulo Alves</p>
-              <p><b>Jogo:</b> Bomber Blast</p>
-              <p><b>Modo:</b> Campanha com chefes e Battle local</p>
-              <p><b>Base desta versão:</b> menu redesenhado no estilo solicitado, usando o background já existente do próprio jogo.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="menu-footer-strip">
-          <span>SELECIONE COM ENTER · CONFIRME COM ESPAÇO</span>
-          <span>v0.6.7</span>
-        </div>
-      </div>
-      <div class="menu-showcase"></div>
+        <div class="menu-tab-panel active" data-menu-panel="campaign"><div class="content-card campaign-card"><div class="stats-row"><span>🏆 RECORDE <b id="record">0</b></span><span>🚩 MELHOR FASE <b id="bestLevel">1</b></span></div><label class="phase-picker">FASE SELECIONADA <select id="levelSelect"><option value="1">Fase 1</option></select></label><div id="worldMap" class="world-map"></div><p class="menu-help-inline">Escolha sua fase e pressione <b>INICIAR CAMPANHA</b>. Para retomar do progresso, use <b>CONTINUAR</b>.</p></div></div>
+        <div class="menu-tab-panel" data-menu-panel="settings" hidden><div class="content-card"><div class="card-title-row card-title-split"><div><h2>Configurações</h2><span>Personalize o jogo</span></div><button id="resumePaused" class="resume-paused" hidden>← VOLTAR AO JOGO</button></div><div class="settings-grid"><div class="setting-block"><p class="label">RESOLUÇÃO / ESCALA DE TELA</p><div class="difficulties resolution-options"><button data-resolution="auto">AUTO</button><button data-resolution="1080">1080P</button><button data-resolution="720">720P</button><button data-resolution="480">480P</button></div><p id="resolutionInfo" class="quality-info"></p></div><div class="setting-block"><p class="label">DIFICULDADE</p><div class="difficulties"><button data-diff="easy">FÁCIL</button><button class="selected" data-diff="normal">NORMAL</button><button data-diff="hard">DIFÍCIL</button></div><p id="difficultyInfo" class="quality-info"></p></div><div class="setting-block"><p class="label">QUALIDADE GRÁFICA</p><div class="difficulties quality-options"><button data-quality="low">BAIXA</button><button data-quality="medium">MÉDIA</button><button class="selected" data-quality="high">ALTA</button></div><p id="qualityInfo" class="quality-info"></p></div><div class="setting-block"><p class="label">CONTROLES MOBILE</p><div class="difficulties mobile-options"><button data-mobile="small">PEQUENO</button><button class="selected" data-mobile="normal">NORMAL</button><button data-mobile="large">GRANDE</button></div></div><div class="setting-block audio-settings"><p class="label">ÁUDIO</p><label class="range-setting">GERAL <input id="masterVolume" type="range" min="0" max="100" step="1"></label><label class="range-setting">MÚSICA <input id="musicVolume" type="range" min="0" max="100" step="1"></label><label class="range-setting">EFEITOS <input id="sfxVolume" type="range" min="0" max="100" step="1"></label></div><div class="setting-block controls-settings"><p class="label">CONTROLES DA CAMPANHA</p><div class="bind-grid"><button data-bind="up">CIMA <b>W</b></button><button data-bind="down">BAIXO <b>S</b></button><button data-bind="left">ESQUERDA <b>A</b></button><button data-bind="right">DIREITA <b>D</b></button><button data-bind="bomb">BOMBA <b>ESPAÇO</b></button><button data-bind="remote">REMOTA <b>Q</b></button><button data-bind="throw">LUVA <b>E</b></button><button data-bind="restart">REINICIAR <b>R</b></button><button data-bind="pause">PAUSA <b>ESC</b></button></div><p class="quality-info">Clique em uma ação e pressione a nova tecla. Conflitos são trocados automaticamente.</p></div></div></div></div>
+        <div class="menu-tab-panel" data-menu-panel="howto" hidden><div class="content-card"><div class="card-title-row"><h2>Como Jogar</h2><span>Guia rápido</span></div><div class="howto-grid"><article><b>1. MOVA-SE</b><p>Explore o labirinto, destrua bricks e evite encostar nos inimigos.</p></article><article><b>2. USE BOMBAS</b><p>Posicione bombas para abrir caminhos e derrotar inimigos. Reações em cadeia podem mudar toda a arena.</p></article><article><b>3. FIQUE FORA DO FOGO</b><p>Observe o pavio, rotas de fuga e o alcance da explosão antes de se prender em corredores.</p></article><article><b>4. COLETE POWER-UPS</b><p>Aumente alcance, quantidade de bombas, velocidade e desbloqueie chute, luva, remota e passes.</p></article><article><b>5. CUMPRA O OBJETIVO</b><p>Cada fase pode pedir limpeza, chaves, sobrevivência, bricks, mini-chefe ou boss.</p></article><article><b>6. USE O PORTAL</b><p>Encontre o portal escondido, complete o objetivo e entre nele para concluir a fase.</p></article></div></div></div>
+        <div class="menu-tab-panel" data-menu-panel="battle" hidden><div class="content-card"><div class="card-title-row"><h2>Modo Battle</h2><span>2 ou 4 jogadores</span></div><p class="subcopy">Monte a partida local, escolha a arena e inicie um confronto rápido.</p><div class="battle-config-grid"><label class="inline-select"><span>JOGADORES</span><select id="battlePlayers"><option value="2">2 JOGADORES</option><option value="4">4 JOGADORES</option></select></label><label class="inline-select"><span>ARENA</span><select id="battleArena"><option value="0">Jardim Neon</option><option value="1">Circuito Fechado</option><option value="2">Gelo Cósmico</option><option value="3">Dunas Solares</option><option value="4">Abismo Violeta</option><option value="5">Arena Caótica</option></select></label></div><button id="battlePlay" class="play battle-start-btn">INICIAR MODO BATTLE</button></div></div>
+        <div class="menu-tab-panel" data-menu-panel="credits" hidden><div class="content-card credits-card"><div class="card-title-row"><h2>Créditos</h2><span>Projeto</span></div><div class="credits-lines"><p><b>Desenvolvimento:</b> Luis Paulo Alves</p><p><b>Jogo:</b> Bomber Blast</p><p><b>Modo:</b> Campanha com chefes e Battle local</p><p><b>Base desta versão:</b> menu redesenhado no estilo solicitado, usando o background já existente do próprio jogo.</p></div></div></div>
+        <div class="menu-footer-strip"><span>SELECIONE COM ENTER · CONFIRME COM ESPAÇO</span><span>v0.6.9</span></div>
+      </div><div class="menu-showcase"></div>
     </div>
   </section>
-
-  <section id="story" class="story-screen" hidden>
-    <div class="story-art"><span class="story-hero">✦</span><span class="story-shadow">◆</span></div>
-    <p id="storyChapter" class="eyebrow">CAPÍTULO 1</p><h2 id="storyTitle">O PRIMEIRO SINAL</h2>
-    <div class="dialog-box"><b id="storySpeaker">NARRADOR</b><p id="storyText"></p><small id="storyPage">1 / 2</small></div>
-    <div class="story-actions"><button id="storySkip">PULAR CENA</button><button id="storyNext">CONTINUAR →</button></div>
-  </section>
-
-  <section id="game" hidden>
-    <header><button id="back">‹ MENU</button><div><h2>BOMBER BLAST v0.6.7</h2><small id="theme">JARDIM NEON</small></div><div class="top-actions"><button id="mute">♪</button><button id="pause">Ⅱ</button></div></header>
-    <div class="hud"><span><small>FASE</small><b id="level">1</b></span><span><small>VIDAS</small><b id="lives" class="hearts">♥♥♥</b></span><span><small>PONTOS</small><b id="score">00000</b></span><span><small>TEMPO</small><b id="time">03:00</b></span></div>
-    <div class="canvas-wrap"><canvas id="board" width="650" height="550"></canvas><div id="overlay" hidden><small id="overlayTop"></small><h2 id="overlayTitle"></h2><p id="overlayScore"></p><div id="resultStats" class="result-stats" hidden></div><div><button id="primary"></button><button id="overlayRestart">REINICIAR</button><button id="overlaySettings">CONFIGURAÇÕES</button><button id="overlayMenu">MENU</button></div></div></div>
-    <div class="stats"><span id="bombStat">💣 1</span><span id="fireStat">🔥 2</span><span id="speedStat">⚡ Nv.1</span><span id="powerStat">SEM PODER</span><span id="enemyStat">👾 0</span></div>
-    <div class="controls"><div class="dpad"><i></i><button data-dir="up">↑</button><i></i><button data-dir="left">←</button><i></i><button data-dir="right">→</button><i></i><button data-dir="down">↓</button><i></i></div><div class="action-stack"><div class="special-stack"><button id="remoteButton" class="special-action">DET.<br>Q</button><button id="throwButton" class="special-action">LUVA<br>E</button></div><button id="bombButton" class="bomb-action"><b>💣</b>BOMBA</button></div></div>
-    <p class="legend">Power-ups: alcance · bombas · velocidade · chute · luva · remota · perfurante · escudo · passa-bombas · passa-paredes · imune ao fogo</p>
-  </section>
-
-  <section id="battle" hidden>
-    <header><button id="battleBack">‹ MENU</button><div><h2>BOMBER BLAST · BATTLE</h2><small>PRIMEIRO A 3 RODADAS</small></div><div></div></header>
-    <div class="battle-help"><b>P1</b> WASD+ESPAÇO · <b>P2</b> SETAS+ENTER · <b>P3</b> IJKL+O · <b>P4</b> NUMPAD 8456+0 · GAMEPADS SUPORTADOS</div>
-    <div class="canvas-wrap"><canvas id="battleBoard" width="650" height="550"></canvas><div id="battleOverlay" hidden><h2 id="battleOverlayTitle"></h2><p id="battleOverlayScore"></p><div><button id="battleAgain">JOGAR NOVAMENTE</button><button id="battleMenu">MENU</button></div></div></div>
-  </section>
+  <section id="story" class="story-screen" hidden><div class="story-art"><span class="story-hero">✦</span><span class="story-shadow">◆</span></div><p id="storyChapter" class="eyebrow">CAPÍTULO 1</p><h2 id="storyTitle">O PRIMEIRO SINAL</h2><div class="dialog-box"><b id="storySpeaker">NARRADOR</b><p id="storyText"></p><small id="storyPage">1 / 2</small></div><div class="story-actions"><button id="storySkip">PULAR CENA</button><button id="storyNext">CONTINUAR →</button></div></section>
+  <section id="game" hidden><header><button id="back">‹ MENU</button><div><h2>BOMBER BLAST v0.6.9</h2><small id="theme">JARDIM NEON</small></div><div class="top-actions"><button id="mute">♪</button><button id="pause">Ⅱ</button></div></header><div class="hud"><span><small>FASE</small><b id="level">1</b></span><span><small>VIDAS</small><b id="lives" class="hearts">♥♥♥</b></span><span><small>PONTOS</small><b id="score">00000</b></span><span><small>TEMPO</small><b id="time">03:00</b></span></div><div class="canvas-wrap"><canvas id="board" width="650" height="550"></canvas><div id="overlay" hidden><small id="overlayTop"></small><h2 id="overlayTitle"></h2><p id="overlayScore"></p><div id="resultStats" class="result-stats" hidden></div><div><button id="primary"></button><button id="overlayRestart">REINICIAR</button><button id="overlaySettings">CONFIGURAÇÕES</button><button id="overlayMenu">MENU</button></div></div></div><div class="stats"><span id="bombStat">💣 1</span><span id="fireStat">🔥 2</span><span id="speedStat">⚡ Nv.1</span><span id="powerStat">SEM PODER</span><span id="enemyStat">👾 0</span></div><div class="controls"><div class="dpad"><i></i><button data-dir="up">↑</button><i></i><button data-dir="left">←</button><i></i><button data-dir="right">→</button><i></i><button data-dir="down">↓</button><i></i></div><div class="action-stack"><div class="special-stack"><button id="remoteButton" class="special-action">DET.<br>Q</button><button id="throwButton" class="special-action">LUVA<br>E</button></div><button id="bombButton" class="bomb-action"><b>💣</b>BOMBA</button></div></div><p class="legend">Power-ups: alcance · bombas · velocidade · chute · luva · remota · perfurante · escudo · passa-bombas · passa-paredes · imune ao fogo</p></section>
+  <section id="battle" hidden><header><button id="battleBack">‹ MENU</button><div><h2>BOMBER BLAST · BATTLE</h2><small>PRIMEIRO A 3 RODADAS</small></div><div></div></header><div class="battle-help"><b>P1</b> WASD+ESPAÇO · <b>P2</b> SETAS+ENTER · <b>P3</b> IJKL+O · <b>P4</b> NUMPAD 8456+0 · GAMEPADS SUPORTADOS</div><div class="canvas-wrap"><canvas id="battleBoard" width="650" height="550"></canvas><div id="battleOverlay" hidden><h2 id="battleOverlayTitle"></h2><p id="battleOverlayScore"></p><div><button id="battleAgain">JOGAR NOVAMENTE</button><button id="battleMenu">MENU</button></div></div></div></section>
 </main>
-<script src="js/game/config.js"></script>
-<script src="js/systems/save.js"></script>
-<script src="js/systems/assets.js"></script>
-<script src="js/systems/audio.js"></script>
-<script src="js/game/levels.js"></script>
-<script src="js/entities/enemies.js"></script>
-<script src="js/systems/input.js"></script>
-<script src="js/systems/ai.js"></script>
-<script src="js/game/gameplay.js"></script>
-<script src="js/game/battle.js"></script>
-<script src="js/render/renderer.js"></script>
-<script src="js/systems/ui.js"></script>
-<script src="js/systems/selftest.js"></script>
-<script src="js/story.js"></script>
-<script src="js/main.js"></script>
+<script src="js/game/config.js"></script><script src="js/systems/save.js"></script><script src="js/systems/assets.js"></script><script src="js/systems/audio.js"></script><script src="js/game/levels.js"></script><script src="js/entities/enemies.js"></script><script src="js/systems/input.js"></script><script src="js/systems/ai.js"></script><script src="js/game/gameplay.js"></script><script src="js/game/battle.js"></script><script src="js/render/renderer.js"></script><script src="js/systems/ui.js"></script><script src="js/systems/selftest.js"></script><script src="js/story.js"></script><script src="js/main.js"></script>
 </body></html>
