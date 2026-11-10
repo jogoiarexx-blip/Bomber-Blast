@@ -1,4 +1,4 @@
-BOMBER BLAST v0.6.1
+BOMBER BLAST v0.7.1
 ==================
 
 COMO ABRIR
@@ -28,11 +28,11 @@ MARCO v0.6.1
 - Auto-teste interno de sistemas principais no console.
 
 CAMPANHA
-- 20 arenas fixas em 4 mundos.
+- 35 arenas em 7 mundos (20 fases originais + 15 de expansão).
 - Objetivos: eliminar inimigos, destruir blocos, encontrar núcleos, sobreviver, mini-chefes e chefes.
 - Portal escondido em bloco destrutível e power-ups pré-escondidos.
-- Mini-chefes nas fases 4, 9, 14 e 19.
-- Chefes nas fases 5, 10, 15 e 20.
+- Mini-chefes nas fases 4, 9, 14, 19, 24, 29 e 34.
+- Chefes nas fases 5, 10, 15, 20, 25, 30 e 35.
 - Resultado com nota S/A/B/C, tempo, kills, blocos, power-ups, combo, no-damage e bônus.
 - Sistema de Continue.
 
@@ -73,3 +73,13 @@ ATUALIZAÇÃO v0.6.1
 - Sistema de áudio com limite de vozes para evitar clipping e excesso de sons simultâneos.
 - Clique da interface sintetizado, sem reutilizar som de bomba.
 - Normalização de teclas no remapeamento de controles.
+
+ATUALIZAÇÃO v0.7.1 (10/11/2026)
+- Corrigidos os minichefes das fases 24, 29 e 34 com detecção por objetivo.
+- Menu deixa de simular campanha em segundo plano; Battle pausa quando a aba perde foco.
+- Corrigidos hit-stop repetidos, chute e reação em cadeia no modo Battle.
+- Corrigido fundo do menu que apontava para imagem inexistente.
+- Removida a injeção tardia do patch v0.6.5, com ondas de Survival integradas ao motor.
+- Expansão de 15 fases separada do módulo de autotestes.
+- Testes internos reforçados, mantendo compatibilidade com saves existentes.
+- Os testes internos não substituem a validação jogável das 35 fases.

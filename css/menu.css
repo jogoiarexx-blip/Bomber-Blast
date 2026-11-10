@@ -1,5 +1,5 @@
 .panel{width:min(100%,1280px);margin:auto;padding:22px;border:1px solid #304966;border-radius:32px;background:rgba(7,14,25,.28);box-shadow:0 28px 80px #000b;position:relative;overflow:hidden;backdrop-filter:blur(2px)}
-.panel-menu{background:linear-gradient(90deg,rgba(4,10,18,.16),rgba(4,10,18,.08)),url('../assets/ui/menu-bg.webp') center center/cover no-repeat;background-color:#07101d;min-height:720px}
+.panel-menu{background:linear-gradient(120deg,rgba(4,11,26,.92),rgba(11,34,50,.78)),url('../assets/sprites/world/floor_boss_1.webp') center center/110px 110px repeat;background-color:#07101d;min-height:720px}
 .panel-menu::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,8,15,.62) 0 34%,rgba(3,8,15,.22) 52%,rgba(3,8,15,.46) 100%),repeating-linear-gradient(105deg,transparent 0 86px,rgba(167,255,99,.08) 87px 89px,transparent 90px 132px);pointer-events:none}
 .panel>*{position:relative;z-index:1}
 .icon,.menu-main-btn,.difficulties button,.bind-grid button,.resume-paused,.world-map button,.play{position:relative;overflow:hidden;isolation:isolate;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease,border-color .18s ease,background .18s ease}
@@ -10,7 +10,7 @@
 .icon{position:absolute;right:18px;top:16px;width:48px;height:48px;border:1px solid rgba(104,140,177,.55);border-radius:14px;background:rgba(10,21,39,.72);color:#fff;box-shadow:0 10px 24px #0007}
 .menu-stage{display:flex;min-height:676px;align-items:stretch}
 .menu-overlay-panel{width:min(470px,100%);padding:28px 26px 22px;border:1px solid rgba(87,155,216,.72);border-radius:28px;background:linear-gradient(180deg,rgba(5,17,30,.78),rgba(5,14,25,.68));box-shadow:inset 0 1px 0 #ffffff14,0 20px 52px #0007;backdrop-filter:blur(8px)}
-.menu-showcase{flex:1}
+.menu-showcase{flex:1;min-height:560px;background:url('../assets/sprites/player/down_0.webp') 64% 82%/min(22vw,290px) no-repeat,url('../assets/sprites/boss_anim/boss1_1.webp') 54% 25%/min(27vw,330px) no-repeat,radial-gradient(ellipse at 60% 55%,#2ce8ff25,transparent 58%);filter:drop-shadow(0 20px 35px #000a)}
 .eyebrow{color:#d5e8ff;letter-spacing:.32em;font-size:10px;font-weight:800;margin:0 0 18px;opacity:.88}
 .menu-logo-art{display:block;width:min(100%,400px);margin:0 0 12px;filter:drop-shadow(0 12px 20px #0008)}
 .hero-tag{margin:0 0 18px;color:#66ebff;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:none}

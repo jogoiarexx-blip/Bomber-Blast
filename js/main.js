@@ -12,7 +12,7 @@ function setView(view){
   ids.forEach(id=>{const el=$('#'+id);if(el)el.hidden=id!==view});
 }
 async function sceneTransition(title='BOMBER BLAST',subtitle='Preparando...',work=null){
-  if(transitioning){if(typeof work==='function')return await work();return}
+  if(transitioning)return;
   const overlay=$('#screenTransition');
   if(!overlay){if(typeof work==='function')return await work();return}
   transitioning=true;
@@ -32,11 +32,17 @@ async function sceneTransition(title='BOMBER BLAST',subtitle='Preparando...',wor
   transitioning=false;
 }
 async function animatedShowMenu(tab=null){
-  await sceneTransition('MENU PRINCIPAL','Retornando ao centro de comando...',()=>BB.UI.showMenu(tab));
+  if(BB.game)BB.game.status='paused';
+  BB.Input.clear();
+  await sceneTransition('MENU PRINCIPAL','Retornando ao centro de comando...',()=>{
+    BB.game=null;
+    pausedSettings=false;
+    BB.UI.showMenu(tab);
+  });
 }
 
 BB.beginLevel=function(g){
-  BB.game=g;BB.Render.ensureWorld(BB.worldIndex(g.level));BB.Input.clear();BB.particles=[];BB.texts=[];BB.shake=0;BB.flash=0;
+  BB.game=g;BB.Render.ensureWorld(BB.worldIndex(g.level));BB.Input.clear();BB.particles=[];BB.texts=[];BB.shake=0;BB.flash=0;BB.hitStop=0;
   setView('game');BB.UI.hideOverlay();BB.Audio.setUrgency(false);BB.Audio.musicFor(g.level,g.level%5===0);last=performance.now();BB.UI.sync()
 };
 function showStory(level,done){
@@ -60,7 +66,7 @@ function start(){if(transitioning)return;const level=BB.clamp(Number($('#levelSe
 BB.finish=function(status){const g=BB.game;if(!g)return;g.status=status;BB.Input.clear();BB.Audio.setUrgency(false);if(status==='won'||status==='completed'){const result=BB.resultData();g.score=result.total;BB.Save.recordResult(g.level,result);BB.UI.populateLevels();BB.UI.showResults(result);BB.Audio.play('win');BB.Audio.stopMusic();BB.UI.overlay(status==='completed'?'HISTÓRIA CONCLUÍDA':'PORTAL CONQUISTADO',status==='completed'?'O REI DO VAZIO CAIU!':`FASE ${g.level} COMPLETA!`,`${g.score} PONTOS · NOTA ${result.grade}`,status==='completed'?'JOGAR NOVAMENTE':'PRÓXIMA FASE');BB.UI.showResults(result);return}if(status==='gameover'){BB.Audio.play('gameover');BB.Audio.stopMusic();const canContinue=g.continues>0;BB.UI.overlay('FIM DE JOGO','GAME OVER',canContinue?`CONTINUES RESTANTES: ${g.continues}`:'SEM CONTINUES',canContinue?'CONTINUAR':'JOGAR DE NOVO');return}if(status==='paused')BB.UI.overlay('JOGO PAUSADO','PAUSA',`${g.score} PONTOS`,'CONTINUAR')};
 function carryFrom(g){return{lives:g.lives,score:g.score,range:g.range,maxBombs:g.maxBombs,speedLevel:g.speedLevel,shield:g.shield,nova:g.nova,remote:g.remote,pierce:g.pierce,fast:g.fast,giant:g.giant,kick:g.kick,glove:g.glove,bombPass:g.bombPass,wallPass:g.wallPass,flamePass:g.flamePass,continues:g.continues}}
 function primary(){const g=BB.game;if(!g)return start();if(g.status==='won'){const level=g.level+1,carry=carryFrom(g);prepareLevel(level,carry)}else if(g.status==='completed'){$('#levelSelect').value='1';start()}else if(g.status==='paused'){g.status='playing';last=performance.now();BB.UI.hideOverlay();BB.Audio.musicFor(g.level,g.level%5===0)}else if(g.status==='gameover'&&g.continues>0){const carry={...g.entry,lives:BB.CONFIG[BB.difficulty].lives,score:Math.floor(g.score*.75),continues:g.continues-1};BB.beginLevel(BB.makeGame(g.level,carry));BB.addText(1,1,'CONTINUE!','#ffe270')}else start()}
-function pause(){const g=BB.game;if(!g||!['playing','paused'].includes(g.status))return;if(g.status==='playing'){g.status='paused';BB.Input.clear();BB.Audio.stopMusic();BB.finish('paused')}else primary()}
+function pause(){const g=BB.game;if($('#game').hidden||!g||!['playing','paused'].includes(g.status))return;if(g.status==='playing'){g.status='paused';BB.Input.clear();BB.Audio.stopMusic();BB.finish('paused')}else primary()}
 async function startBattle(){
   if(transitioning)return;
   await sceneTransition('MODO BATTLE','Preparando a arena local...',()=>{
@@ -86,10 +92,10 @@ $('#battleArena').onchange=()=>BB.Save.set('settings.battleArena',Number($('#bat
 $('#levelSelect').onchange=()=>BB.UI.renderWorldMap();
 for(const [id,kind] of [['masterVolume','master'],['musicVolume','music'],['sfxVolume','sfx']])$('#'+id).oninput=e=>BB.Audio.setVolume(kind,e.target.value/100);
 document.querySelectorAll('[data-dir]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();BB.Input.press(b.dataset.dir,true)});['pointerup','pointerleave','pointercancel'].forEach(n=>b.addEventListener(n,()=>BB.Input.press(b.dataset.dir,false)))});
-addEventListener('keydown',e=>{if(bindListening){e.preventDefault();assignBinding(bindListening,e.key);return}if(BB.Battle.active){BB.Battle.press(e.key,true);if(e.key==='Escape')animatedShowMenu();return}if($('#story').hidden===false){if(!e.repeat&&(e.key==='Enter'||e.key===' '))nextStory();if(!e.repeat&&e.key==='Escape')closeStory();return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action)){e.preventDefault();BB.Input.press(action,true);return}if(e.repeat)return;if(action==='bomb'){e.preventDefault();BB.putBomb()}if(action==='remote')BB.remoteDetonate();if(action==='throw')BB.throwBomb();if(action==='restart')BB.restartLevel();if(action==='pause')pause()});
+addEventListener('keydown',e=>{if(bindListening){e.preventDefault();assignBinding(bindListening,e.key);return}if(BB.Battle.active){if(e.key==='Escape'){animatedShowMenu();return}if(e.key.toLowerCase()==='p'){if(!e.repeat)BB.Battle.togglePause();return}if(!BB.Battle.suspended)BB.Battle.press(e.key,true);return}if($('#story').hidden===false){if(!e.repeat&&(e.key==='Enter'||e.key===' '))nextStory();if(!e.repeat&&e.key==='Escape')closeStory();return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action)){e.preventDefault();BB.Input.press(action,true);return}if(e.repeat)return;if(action==='bomb'){e.preventDefault();BB.putBomb()}if(action==='remote')BB.remoteDetonate();if(action==='throw')BB.throwBomb();if(action==='restart')BB.restartLevel();if(action==='pause')pause()});
 addEventListener('keyup',e=>{if(BB.Battle.active){BB.Battle.press(e.key,false);return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action))BB.Input.press(action,false)});
-addEventListener('blur',()=>{if(BB.game?.status==='playing'&&!BB.Battle.active)pause()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&BB.game?.status==='playing'&&!BB.Battle.active)pause()});
-$('#play').onclick=start;const continueBtn=$('#continuePlay');if(continueBtn)continueBtn.onclick=()=>{const best=BB.clamp(BB.Save?.get('progress.bestLevel',1)||1,1,BB.MAX_LEVEL);const levelSel=$('#levelSelect');if(levelSel)levelSel.value=String(best);start()};$('#battlePlay').onclick=startBattle;$('#storyNext').onclick=nextStory;$('#storySkip').onclick=closeStory;$('#sound').onclick=()=>BB.Audio.toggle();$('#mute').onclick=()=>BB.Audio.toggle();$('#back').onclick=()=>animatedShowMenu();$('#pause').onclick=pause;$('#bombButton').onpointerdown=e=>{e.preventDefault();BB.putBomb()};$('#remoteButton').onclick=()=>BB.remoteDetonate();$('#throwButton').onclick=()=>BB.throwBomb();$('#primary').onclick=primary;$('#overlayMenu').onclick=()=>animatedShowMenu();$('#overlayRestart').onclick=()=>{BB.UI.hideOverlay();if(BB.game){BB.game.status='playing';BB.restartLevel()}};$('#overlaySettings').onclick=()=>{if(!BB.game||BB.game.status!=='paused')return;pausedSettings=true;setView('menu');BB.UI.showMenuTab('settings');$('#resumePaused').hidden=false;BB.Audio.stopMusic()};$('#resumePaused').onclick=()=>{if(!pausedSettings||!BB.game)return;pausedSettings=false;$('#resumePaused').hidden=true;setView('game');BB.game.status='playing';BB.UI.hideOverlay();BB.Audio.musicFor(BB.game.level,BB.game.level%5===0);last=performance.now()};$('#battleBack').onclick=()=>animatedShowMenu();$('#battleMenu').onclick=()=>animatedShowMenu();$('#battleAgain').onclick=()=>{document.querySelector('#battleOverlay').hidden=true;BB.Battle.start(Number($('#battlePlayers').value)||2,Number($('#battleArena').value)||0)};document.addEventListener('click',e=>{if(e.target.closest('button,select'))BB.Audio.play('ui_click',.12,1)});
+addEventListener('blur',()=>{if(BB.Battle.active)BB.Battle.suspend();else if(BB.game?.status==='playing')pause()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(BB.Battle.active)BB.Battle.suspend();else if(BB.game?.status==='playing')pause()}});
+$('#play').onclick=start;const continueBtn=$('#continuePlay');if(continueBtn)continueBtn.onclick=()=>{const best=BB.clamp(BB.Save?.get('progress.bestLevel',1)||1,1,BB.MAX_LEVEL);const levelSel=$('#levelSelect');if(levelSel)levelSel.value=String(best);start()};$('#battlePlay').onclick=startBattle;$('#storyNext').onclick=nextStory;$('#storySkip').onclick=closeStory;$('#sound').onclick=()=>BB.Audio.toggle();$('#mute').onclick=()=>BB.Audio.toggle();$('#back').onclick=()=>animatedShowMenu();$('#pause').onclick=pause;$('#bombButton').onpointerdown=e=>{e.preventDefault();BB.putBomb()};$('#remoteButton').onclick=()=>BB.remoteDetonate();$('#throwButton').onclick=()=>BB.throwBomb();$('#primary').onclick=primary;$('#overlayMenu').onclick=()=>animatedShowMenu();$('#overlayRestart').onclick=()=>{BB.UI.hideOverlay();if(BB.game){BB.game.status='playing';BB.restartLevel()}};$('#overlaySettings').onclick=()=>{if(!BB.game||BB.game.status!=='paused')return;pausedSettings=true;setView('menu');BB.UI.showMenuTab('settings');$('#resumePaused').hidden=false;BB.Audio.stopMusic()};$('#resumePaused').onclick=()=>{if(!pausedSettings||!BB.game)return;pausedSettings=false;$('#resumePaused').hidden=true;setView('game');BB.game.status='playing';BB.UI.hideOverlay();BB.Audio.musicFor(BB.game.level,BB.game.level%5===0);last=performance.now()};$('#battleResume').onclick=()=>BB.Battle.resume();$('#battleBack').onclick=()=>animatedShowMenu();$('#battleMenu').onclick=()=>animatedShowMenu();$('#battleAgain').onclick=()=>{document.querySelector('#battleOverlay').hidden=true;BB.Battle.start(Number($('#battlePlayers').value)||2,Number($('#battleArena').value)||0)};document.addEventListener('click',e=>{if(e.target.closest('button,select'))BB.Audio.play('ui_click',.12,1)});
 requestAnimationFrame(loop)
 })();

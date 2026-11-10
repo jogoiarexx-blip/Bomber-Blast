@@ -3,7 +3,7 @@ BB.spawnEnemies=function(grid,level,difficulty){
   const spots=[];
   for(let y=1;y<BB.ROWS-1;y++)for(let x=1;x<BB.COLS-1;x++)if(!grid[y][x]&&x+y>9)spots.push({x,y});
   spots.sort((a,b)=>b.x+b.y-a.x-a.y);
-  const bossLevel=level%5===0,mini=[4,9,14,19].includes(level),cfg=BB.CONFIG[difficulty];
+  const objective=BB.levelDef(level).objective,bossLevel=objective==='boss',mini=objective==='miniboss',cfg=BB.CONFIG[difficulty];
   const count=Math.min(10,cfg.enemies+Math.floor(level*.45)+(mini?1:0));
   const kinds=['bug','slime','hunter','tank','ghost','bomber'];
   return spots.slice(0,count).map((p,i)=>{
