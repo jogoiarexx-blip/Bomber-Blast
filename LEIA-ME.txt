@@ -1,4 +1,4 @@
-BOMBER BLAST v0.7.2
+BOMBER BLAST v0.7.3
 ==================
 
 COMO ABRIR
@@ -92,3 +92,11 @@ ATUALIZAÇÃO v0.7.2 (10/11/2026)
 - HUD e controles mobile mais legíveis.
 - Self-tests ampliados; saves existentes preservados.
 - Validação jogável completa das 35 fases ainda pendente.
+
+ATUALIZAÇÃO v0.7.3 (10/11/2026)
+- Menu inicial reconstruído de zero com apenas NEW GAME, CONTINUE e OPTIONS.
+- NOVO JOGO sempre inicia a primeira fase sem apagar os recordes existentes.
+- CONTINUE retoma a melhor fase desbloqueada e fica indisponível sem progresso.
+- Configurações, seleção de fases, Battle, Ajuda e Créditos ficam dentro de OPTIONS.
+- Modo de configurações durante pausa preservado com retorno direto à partida.
+- Visual cinematográfico leve, responsivo e sem bibliotecas ou downloads adicionais.

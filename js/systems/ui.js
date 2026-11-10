@@ -8,8 +8,40 @@ BB.UI={
   overlay(top,title,score,primary){this.$('#overlay').hidden=false;this.$('#overlayTop').textContent=top;this.$('#overlayTitle').textContent=title;this.$('#overlayScore').textContent=score;this.$('#primary').textContent=primary;const paused=BB.game?.status==='paused';if(this.$('#overlayRestart'))this.$('#overlayRestart').hidden=!paused;if(this.$('#overlaySettings'))this.$('#overlaySettings').hidden=!paused},
   hideOverlay(){this.$('#overlay').hidden=true;const r=this.$('#resultStats');if(r){r.hidden=true;r.innerHTML=''}},
   showResults(data){const r=this.$('#resultStats');if(!r)return;r.hidden=false;r.innerHTML=`<span class="grade">${data.grade}</span><span>TEMPO<b>${data.remaining}s</b></span><span>INIMIGOS<b>${data.kills}</b></span><span>BLOCOS<b>${data.bricks}</b></span><span>POWER-UPS<b>${data.powers}</b></span><span>COMBO MÁX.<b>x${data.combo}</b></span><span>SEM DANO<b>${data.noDamage?'SIM':'NÃO'}</b></span><span>BÔNUS<b>+${data.bonus}</b></span>`},
-  showMenu(tab=null){if(this.$('#resumePaused'))this.$('#resumePaused').hidden=true;this.$('#game').hidden=true;this.$('#story').hidden=true;this.$('#battle').hidden=true;this.$('#menu').hidden=false;BB.Battle?.stop();this.populateLevels();this.$('#record').textContent=BB.Save?.get('progress.record',0)||0;this.$('#bestLevel').textContent=BB.Save?.get('progress.bestLevel',1)||1;this.showMenuTab(tab||localStorage.getItem('bb-menu-tab')||'campaign');BB.Audio.stopMusic()},
-  showMenuTab(tab='campaign'){document.querySelectorAll('[data-menu-tab]').forEach(b=>b.classList.toggle('active',b.dataset.menuTab===tab));document.querySelectorAll('[data-menu-panel]').forEach(p=>{const active=p.dataset.menuPanel===tab;p.hidden=!active;p.classList.toggle('active',active)});localStorage.setItem('bb-menu-tab',tab)},
+  refreshContinue(){
+    const btn=this.$('#continuePlay');
+    if(!btn)return;
+    const level=BB.clamp(BB.Save?.get('progress.bestLevel',1)||1,1,BB.MAX_LEVEL);
+    const hasProgress=level>1||Object.keys(BB.Save?.get('progress.ranks',{})||{}).length>0;
+    btn.disabled=!hasProgress;
+    btn.title=hasProgress?`Retomar a partir da fase ${level}`:'Conclua uma fase para desbloquear Continue';
+    btn.setAttribute('aria-label',hasProgress?`Continue, fase ${level}`:'Continue indisponível: ainda não há progresso');
+  },
+  showMenu(tab=null){
+    if(this.$('#resumePaused'))this.$('#resumePaused').hidden=true;
+    this.$('#game').hidden=true;this.$('#story').hidden=true;this.$('#battle').hidden=true;
+    this.$('#menu').hidden=false;
+    BB.Battle?.stop();
+    this.populateLevels();
+    this.$('#record').textContent=BB.Save?.get('progress.record',0)||0;
+    this.$('#bestLevel').textContent=BB.Save?.get('progress.bestLevel',1)||1;
+    this.refreshContinue();
+    this.showMenuTab(tab||'home');
+    BB.Audio.stopMusic();
+  },
+  showMenuTab(tab='home'){
+    const home=tab==='home',allowed=['campaign','settings','howto','battle','credits'];
+    if(!home&&!allowed.includes(tab))tab='settings';
+    this.$('#menuHome').hidden=!home;
+    this.$('#menuOptionsScreen').hidden=home;
+    document.querySelectorAll('[data-menu-tab]').forEach(b=>b.classList.toggle('active',!home&&b.dataset.menuTab===tab));
+    document.querySelectorAll('[data-menu-panel]').forEach(p=>{
+      const active=!home&&p.dataset.menuPanel===tab;
+      p.hidden=!active;p.classList.toggle('active',active);
+    });
+    const scroller=this.$('.menu-options-content');
+    if(scroller)scroller.scrollTop=0;
+  },
   setDifficulty(v){BB.difficulty=v;BB.Save?.set('settings.difficulty',v);document.querySelectorAll('[data-diff]').forEach(b=>b.classList.toggle('selected',b.dataset.diff===v));const info=this.$('#difficultyInfo');if(info)info.textContent={easy:'IA básica: patrulha aleatória, reação lenta ao perigo, bombas raras, 5 vidas e mais tempo.',normal:'IA equilibrada: usa rotas, evita explosões próximas e persegue de forma razoável. 3 vidas.',hard:'IA avançada: pathfinding, previsão de reações em cadeia, busca rotas seguras, evita becos e usa bombas só com fuga. 2 vidas.'}[v]},
   setQuality(v){BB.quality=v;BB.Save?.set('settings.quality',v);document.body.dataset.quality=v;document.querySelectorAll('[data-quality]').forEach(b=>b.classList.toggle('selected',b.dataset.quality===v));const info=this.$('#qualityInfo');if(info)info.textContent={low:'Visual simplificado, 30 FPS alvo e menos partículas.',medium:'Equilíbrio entre efeitos e desempenho.',high:'Sprites, partículas, sombras e efeitos completos em alta fluidez.'}[v]},
   setMobileSize(v){document.body.dataset.mobile=v;BB.Save?.set('settings.mobile',v);document.querySelectorAll('[data-mobile]').forEach(b=>b.classList.toggle('selected',b.dataset.mobile===v))},
