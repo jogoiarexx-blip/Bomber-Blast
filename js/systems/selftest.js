@@ -20,8 +20,11 @@ BB.SelfTest={
     ok('chefes-expansao',[25,30,35].every(n=>BB.LEVELS[n]?.objective==='boss'));
     ok('ondas-com-limite',[6,13,26,33].every(n=>BB.LEVELS[n]?.objective==='survive'&&BB.LEVELS[n]?.waveMax>=1));
     ok('assets',typeof BB.Assets?.waitUntilSettled==='function');
+    ok('ai-temporal',typeof BB.AI?.dangerWindows==='function'&&typeof BB.AI?.escapeStep==='function');
+    ok('independent-input',!!BB.Input?.sources?.keyboard&&!!BB.Input?.sources?.gamepad);
+    ok('floor-variant',BB.Render.floorVariant(0,0)!==BB.Render.floorVariant(1,0));
     const failed=results.filter(r=>!r.ok);
-    console.info(`[Bomber Blast v0.7.1 self-test] ${results.length-failed.length}/${results.length} OK`,failed);
+    console.info(`[Bomber Blast v0.7.2 self-test] ${results.length-failed.length}/${results.length} OK`,failed);
     return failed.length===0;
   }
 };

@@ -1,4 +1,4 @@
-BOMBER BLAST v0.7.1
+BOMBER BLAST v0.7.2
 ==================
 
 COMO ABRIR
@@ -83,3 +83,12 @@ ATUALIZAÇÃO v0.7.1 (10/11/2026)
 - Expansão de 15 fases separada do módulo de autotestes.
 - Testes internos reforçados, mantendo compatibilidade com saves existentes.
 - Os testes internos não substituem a validação jogável das 35 fases.
+
+ATUALIZAÇÃO v0.7.2 (10/11/2026)
+- IA com janelas temporais de perigo e reação em cadeia.
+- Direções de teclado, gamepad e toque deixam de se anular.
+- Variação bidimensional do piso nos sete mundos e no Battle.
+- Sombras leves, feedback de dano, animação sutil de personagem e bombas.
+- HUD e controles mobile mais legíveis.
+- Self-tests ampliados; saves existentes preservados.
+- Validação jogável completa das 35 fases ainda pendente.

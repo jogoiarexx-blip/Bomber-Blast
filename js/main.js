@@ -73,7 +73,30 @@ async function startBattle(){
     BB.game=null;BB.Input.clear();BB.Audio.stopMusic();setView('battle');$('#battleOverlay').hidden=true;BB.Battle.start(Number($('#battlePlayers').value)||2,Number($('#battleArena').value)||0);last=performance.now()
   })
 }
-let padPause=false;function pollCampaignGamepad(){if(BB.Battle.active||!BB.game||!navigator.getGamepads)return;const p=[...navigator.getGamepads()].find(Boolean);if(!p)return;const ax=p.axes?.[0]||0,ay=p.axes?.[1]||0;let dir=null;const up=!!p.buttons?.[12]?.pressed,down=!!p.buttons?.[13]?.pressed,left=!!p.buttons?.[14]?.pressed,right=!!p.buttons?.[15]?.pressed;if(up||down||left||right)dir=up?'up':down?'down':left?'left':'right';else if(Math.abs(ax)>.35||Math.abs(ay)>.35)dir=Math.abs(ax)>Math.abs(ay)?(ax<0?'left':'right'):(ay<0?'up':'down');if(BB.game.status==='playing')for(const d of ['up','down','left','right'])BB.Input.press(d,d===dir);const bomb=!!p.buttons?.[0]?.pressed,remote=!!p.buttons?.[1]?.pressed,throwB=!!p.buttons?.[2]?.pressed,pauseBtn=!!p.buttons?.[9]?.pressed;if(BB.game.status==='playing'){if(bomb&&!padBomb)BB.putBomb();if(remote&&!padRemote)BB.remoteDetonate();if(throwB&&!padThrow)BB.throwBomb()}if(pauseBtn&&!padPause)pause();padBomb=bomb;padRemote=remote;padThrow=throwB;padPause=pauseBtn}
+let padPause=false;
+function pollCampaignGamepad(){
+ if(BB.Battle.active||!BB.game||!navigator.getGamepads){BB.Input.clear('gamepad');return}
+ const p=[...navigator.getGamepads()].find(Boolean);
+ if(!p){BB.Input.clear('gamepad');padBomb=padRemote=padThrow=padPause=false;return}
+ const ax=p.axes?.[0]||0,ay=p.axes?.[1]||0;
+ const up=!!p.buttons?.[12]?.pressed,down=!!p.buttons?.[13]?.pressed,
+       left=!!p.buttons?.[14]?.pressed,right=!!p.buttons?.[15]?.pressed;
+ let dir=null;
+ if(up||down||left||right)dir=up?'up':down?'down':left?'left':'right';
+ else if(Math.abs(ax)>.35||Math.abs(ay)>.35)
+   dir=Math.abs(ax)>Math.abs(ay)?(ax<0?'left':'right'):(ay<0?'up':'down');
+ for(const d of ['up','down','left','right'])
+   BB.Input.press(d,BB.game.status==='playing'&&dir===d,'gamepad');
+ const bomb=!!p.buttons?.[0]?.pressed,remote=!!p.buttons?.[1]?.pressed,
+       throwB=!!p.buttons?.[2]?.pressed,pauseBtn=!!p.buttons?.[9]?.pressed;
+ if(BB.game.status==='playing'){
+   if(bomb&&!padBomb)BB.putBomb();
+   if(remote&&!padRemote)BB.remoteDetonate();
+   if(throwB&&!padThrow)BB.throwBomb();
+ }
+ if(pauseBtn&&!padPause)pause();
+ padBomb=bomb;padRemote=remote;padThrow=throwB;padPause=pauseBtn;
+}
 function loop(now){const dt=Math.min(100,now-last||16);last=now;if(BB.Battle.active){BB.Battle.update(dt);BB.Battle.draw()}else{pollCampaignGamepad();BB.update(dt);const interval=BB.quality==='low'?33:BB.quality==='medium'?20:0;if(!interval||now-lastDraw>=interval){BB.Render.draw(now);lastDraw=now}}requestAnimationFrame(loop)}
 function bindControl(action){bindListening=action;document.querySelectorAll('[data-bind]').forEach(b=>b.classList.toggle('listening',b.dataset.bind===action))}
 function assignBinding(action,key){key=normalizeKey(key);const controls={...BB.Save.data.controls};const conflict=Object.entries(controls).find(([a,k])=>a!==action&&normalizeKey(k)===key);if(conflict){const old=controls[action];controls[conflict[0]]=old}controls[action]=key;BB.Save.data.controls=controls;BB.Save.flush();bindListening=null;BB.UI.refreshBindings();document.querySelectorAll('[data-bind]').forEach(b=>b.classList.remove('listening'))}
@@ -91,11 +114,11 @@ $('#battlePlayers').onchange=()=>BB.Save.set('settings.battlePlayers',Number($('
 $('#battleArena').onchange=()=>BB.Save.set('settings.battleArena',Number($('#battleArena').value));
 $('#levelSelect').onchange=()=>BB.UI.renderWorldMap();
 for(const [id,kind] of [['masterVolume','master'],['musicVolume','music'],['sfxVolume','sfx']])$('#'+id).oninput=e=>BB.Audio.setVolume(kind,e.target.value/100);
-document.querySelectorAll('[data-dir]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();BB.Input.press(b.dataset.dir,true)});['pointerup','pointerleave','pointercancel'].forEach(n=>b.addEventListener(n,()=>BB.Input.press(b.dataset.dir,false)))});
-addEventListener('keydown',e=>{if(bindListening){e.preventDefault();assignBinding(bindListening,e.key);return}if(BB.Battle.active){if(e.key==='Escape'){animatedShowMenu();return}if(e.key.toLowerCase()==='p'){if(!e.repeat)BB.Battle.togglePause();return}if(!BB.Battle.suspended)BB.Battle.press(e.key,true);return}if($('#story').hidden===false){if(!e.repeat&&(e.key==='Enter'||e.key===' '))nextStory();if(!e.repeat&&e.key==='Escape')closeStory();return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action)){e.preventDefault();BB.Input.press(action,true);return}if(e.repeat)return;if(action==='bomb'){e.preventDefault();BB.putBomb()}if(action==='remote')BB.remoteDetonate();if(action==='throw')BB.throwBomb();if(action==='restart')BB.restartLevel();if(action==='pause')pause()});
-addEventListener('keyup',e=>{if(BB.Battle.active){BB.Battle.press(e.key,false);return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action))BB.Input.press(action,false)});
-addEventListener('blur',()=>{if(BB.Battle.active)BB.Battle.suspend();else if(BB.game?.status==='playing')pause()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(BB.Battle.active)BB.Battle.suspend();else if(BB.game?.status==='playing')pause()}});
+document.querySelectorAll('[data-dir]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();BB.Input.press(b.dataset.dir,true,'touch')});['pointerup','pointerleave','pointercancel'].forEach(n=>b.addEventListener(n,()=>BB.Input.press(b.dataset.dir,false,'touch')))});
+addEventListener('keydown',e=>{if(bindListening){e.preventDefault();assignBinding(bindListening,e.key);return}if(BB.Battle.active){if(e.key==='Escape'){animatedShowMenu();return}if(e.key.toLowerCase()==='p'){if(!e.repeat)BB.Battle.togglePause();return}if(!BB.Battle.suspended)BB.Battle.press(e.key,true);return}if($('#story').hidden===false){if(!e.repeat&&(e.key==='Enter'||e.key===' '))nextStory();if(!e.repeat&&e.key==='Escape')closeStory();return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action)){e.preventDefault();BB.Input.press(action,true,'keyboard');return}if(e.repeat)return;if(action==='bomb'){e.preventDefault();BB.putBomb()}if(action==='remote')BB.remoteDetonate();if(action==='throw')BB.throwBomb();if(action==='restart')BB.restartLevel();if(action==='pause')pause()});
+addEventListener('keyup',e=>{if(BB.Battle.active){BB.Battle.press(e.key,false);return}const action=campaignActionForKey(e.key);if(['up','down','left','right'].includes(action))BB.Input.press(action,false,'keyboard')});
+addEventListener('blur',()=>{BB.Input.clear();if(BB.Battle.active)BB.Battle.suspend();else if(BB.game?.status==='playing')pause()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){BB.Input.clear();if(BB.Battle.active)BB.Battle.suspend();else if(BB.game?.status==='playing')pause()}});
 $('#play').onclick=start;const continueBtn=$('#continuePlay');if(continueBtn)continueBtn.onclick=()=>{const best=BB.clamp(BB.Save?.get('progress.bestLevel',1)||1,1,BB.MAX_LEVEL);const levelSel=$('#levelSelect');if(levelSel)levelSel.value=String(best);start()};$('#battlePlay').onclick=startBattle;$('#storyNext').onclick=nextStory;$('#storySkip').onclick=closeStory;$('#sound').onclick=()=>BB.Audio.toggle();$('#mute').onclick=()=>BB.Audio.toggle();$('#back').onclick=()=>animatedShowMenu();$('#pause').onclick=pause;$('#bombButton').onpointerdown=e=>{e.preventDefault();BB.putBomb()};$('#remoteButton').onclick=()=>BB.remoteDetonate();$('#throwButton').onclick=()=>BB.throwBomb();$('#primary').onclick=primary;$('#overlayMenu').onclick=()=>animatedShowMenu();$('#overlayRestart').onclick=()=>{BB.UI.hideOverlay();if(BB.game){BB.game.status='playing';BB.restartLevel()}};$('#overlaySettings').onclick=()=>{if(!BB.game||BB.game.status!=='paused')return;pausedSettings=true;setView('menu');BB.UI.showMenuTab('settings');$('#resumePaused').hidden=false;BB.Audio.stopMusic()};$('#resumePaused').onclick=()=>{if(!pausedSettings||!BB.game)return;pausedSettings=false;$('#resumePaused').hidden=true;setView('game');BB.game.status='playing';BB.UI.hideOverlay();BB.Audio.musicFor(BB.game.level,BB.game.level%5===0);last=performance.now()};$('#battleResume').onclick=()=>BB.Battle.resume();$('#battleBack').onclick=()=>animatedShowMenu();$('#battleMenu').onclick=()=>animatedShowMenu();$('#battleAgain').onclick=()=>{document.querySelector('#battleOverlay').hidden=true;BB.Battle.start(Number($('#battlePlayers').value)||2,Number($('#battleArena').value)||0)};document.addEventListener('click',e=>{if(e.target.closest('button,select'))BB.Audio.play('ui_click',.12,1)});
 requestAnimationFrame(loop)
 })();
